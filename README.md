@@ -254,6 +254,8 @@ npm run prueba              # en otra
 
 ## Equipo
 
+![Sección «El equipo» de la página Nosotros, con las cinco tarjetas](docs/capturas/07-equipo.jpg)
+
 | Integrante | Área en el proyecto |
 | --- | --- |
 | Luis Amaral | Carrito de reservas: reglas de precio, descuento por paquete y flujo de confirmación |
