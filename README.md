@@ -209,6 +209,9 @@ alapar/
 └── vercel.json            URLs limpias y caché en el hosting
 ```
 
+El ZIP que se entregó por Teams lleva solo el sitio (y las capturas); `src/`,
+`build.mjs` y `pruebas/` están en este repositorio.
+
 ## Cómo verlo y modificarlo
 
 - **En línea:** https://alapar-utp.vercel.app
