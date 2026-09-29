@@ -214,8 +214,11 @@ try {
 
   await hoja.locator("#pestanaRegistro").click();
   await esperar(350);
-  const correoNuevo = `laura.${PUBLICO ? sello : "prueba"}@prueba.test`;
-  await hoja.fill("#registroNombre", "Laura Prueba");
+  // Contra el sitio publicado la cuenta nueva usa un nombre ficticio como los de la demo.
+  const [nombreNuevo, correoNuevo] = PUBLICO
+    ? ["Valentina Ríos", `valentina.${sello}@correo.demo`]
+    : ["Laura Prueba", "laura.prueba@prueba.test"];
+  await hoja.fill("#registroNombre", nombreNuevo);
   await hoja.fill("#registroCorreo", correoNuevo);
   await hoja.fill("#registroClave", "corta");
   await hoja.locator("#registroAcepto").check();
@@ -226,7 +229,7 @@ try {
   await hoja.locator('#formRegistro button[type="submit"]').click();
   await hoja.waitForURL(/mi-cuenta/, { timeout: 8000 });
   await esperar(900);
-  ok((await texto("#cuentaNombre")) === "Laura", "la cuenta nueva entra directo a «Mis reservas»");
+  ok((await texto("#cuentaNombre")) === nombreNuevo.split(" ")[0], "la cuenta nueva entra directo a «Mis reservas»");
   ok((await texto("#listaReservas")).includes("Aún no has reservado"), "y todavía no tiene reservas");
   await ir("admin.html");
   ok(await hoja.locator("#adminSinPermiso").isVisible(), "una cuenta de estudiante no ve el panel");
