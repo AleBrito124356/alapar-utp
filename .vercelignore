@@ -1,0 +1,11 @@
+src
+build.mjs
+assets/gen
+README.md
+*.zip
+.gitignore
+docs
+pruebas
+node_modules
+package.json
+package-lock.json

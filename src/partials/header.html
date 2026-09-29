@@ -1,0 +1,102 @@
+
+  <!-- ============ CABECERA / NAVEGACIÓN ============ -->
+  <header class="nav-ap {{navclase}}" id="cabecera">
+    <nav class="navbar" aria-label="Navegación principal">
+      <div class="container">
+        <a class="marca-ap" href="index.html" aria-label="A la Par, ir al inicio">
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+            <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+            <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span>a la par</span>
+        </a>
+
+        <ul class="navbar-nav d-none d-lg-flex flex-row align-items-center">
+          <li class="nav-item"><a class="nav-link{{act:inicio}}"{{aria:inicio}} href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link{{act:como-funciona}}"{{aria:como-funciona}} href="como-funciona.html">Cómo funciona</a></li>
+          <li class="nav-item"><a class="nav-link{{act:materias}}"{{aria:materias}} href="materias.html">Materias</a></li>
+          <li class="nav-item"><a class="nav-link{{act:tutores}}"{{aria:tutores}} href="tutores.html">Tutores</a></li>
+          <li class="nav-item"><a class="nav-link{{act:nosotros}}"{{aria:nosotros}} href="nosotros.html">Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link{{act:contacto}}"{{aria:contacto}} href="contacto.html">Contacto</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <button class="boton-carrito" type="button" data-carrito-boton data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral" aria-label="Carrito vacío">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.4a1.6 1.6 0 0 0 1.5-1.2L20.5 8H6.1"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>
+            <span class="boton-carrito__num" data-carrito-num hidden>0</span>
+          </button>
+          <a class="btn btn-tinta btn-cta d-none d-sm-inline-flex" href="tutores.html">
+            Buscar tutor
+            <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <button class="hamburguesa d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menú">
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Menú lateral para pantallas pequeñas (offcanvas de Bootstrap) -->
+  <div class="offcanvas offcanvas-end menu-lateral" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralTitulo">
+    <div class="offcanvas-header">
+      <span class="marca-ap" id="menuLateralTitulo">
+        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+          <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+          <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>a la par</span>
+      </span>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar menú"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <nav aria-label="Navegación móvil">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link{{act:inicio}}" href="index.html"><small>01</small>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link{{act:como-funciona}}" href="como-funciona.html"><small>02</small>Cómo funciona</a></li>
+          <li class="nav-item"><a class="nav-link{{act:materias}}" href="materias.html"><small>03</small>Materias</a></li>
+          <li class="nav-item"><a class="nav-link{{act:tutores}}" href="tutores.html"><small>04</small>Tutores</a></li>
+          <li class="nav-item"><a class="nav-link{{act:nosotros}}" href="nosotros.html"><small>05</small>Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link{{act:contacto}}" href="contacto.html"><small>06</small>Contacto</a></li>
+          <li class="nav-item"><a class="nav-link{{act:carrito}}" href="carrito.html"><small>07</small>Carrito</a></li>
+        </ul>
+      </nav>
+      <div class="mt-auto pt-4">
+        <a class="btn btn-tinta w-100 justify-content-center" href="tutores.html">Buscar tutor</a>
+        <p class="txt-mono txt-suave mt-3 mb-0">Tutorías entre pares · UTP</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito: panel lateral con las horas elegidas (lo pinta js/carrito.js) -->
+  <div class="offcanvas offcanvas-end carrito-lateral" tabindex="-1" id="carritoLateral" aria-labelledby="carritoLateralTitulo" data-carrito-zona>
+    <div class="offcanvas-header">
+      <div>
+        <span class="eyebrow">Tu carrito</span>
+        <h2 class="carrito-lateral__titulo" id="carritoLateralTitulo" tabindex="-1" data-carrito-titulo>Horas de tutoría</h2>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar carrito"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="carrito-vacio" data-si-vacio>
+        <p class="carrito-vacio__titulo">Todavía no hay horas aquí.</p>
+        <p class="txt-suave">Elige un tutor, la materia y cuántas horas necesitas. Todo se guarda en este navegador hasta que confirmes.</p>
+        <a class="btn btn-tinta btn-sm" href="tutores.html">Buscar tutor
+          <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <ul class="lista-carrito" data-carrito-lista aria-label="Sesiones en el carrito"></ul>
+    </div>
+    <div class="carrito-lateral__pie" data-si-lleno hidden>
+      <div data-carrito-resumen></div>
+      <a class="btn btn-tinta w-100 justify-content-center mt-3" href="carrito.html">Revisar y reservar
+        <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <p class="carrito-lateral__nota">No cobramos en línea: pagas a tu tutor al terminar cada sesión.</p>
+    </div>
+  </div>
+  <p class="visually-hidden" id="carritoAnuncio" role="status" aria-live="polite"></p>
+
+  <main id="contenido">

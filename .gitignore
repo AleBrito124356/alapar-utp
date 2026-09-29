@@ -1,0 +1,7 @@
+.vercel
+assets/gen/
+*.zip
+Thumbs.db
+.DS_Store
+
+node_modules/

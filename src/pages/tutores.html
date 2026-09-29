@@ -1,0 +1,94 @@
+<!-- {"titulo": "Tutores", "descripcion": "Directorio de tutores verificados de la UTP. Filtra por facultad, materia y modalidad; compara calificaciones y agenda tu sesión.", "pagina": "tutores"} -->
+
+    <!-- ============ CABECERA ============ -->
+    <section class="cabecera" aria-labelledby="titulo-pagina">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-9">
+            <span class="eyebrow">Directorio</span>
+            <h1 id="titulo-pagina" class="reveal">Tutores que <mark>ya aprobaron</mark> lo que tú estás cursando</h1>
+            <p class="lead reveal">Todos son estudiantes activos de la UTP, verificados por el equipo y calificados por quienes ya tomaron sesiones con ellos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DIRECTORIO ============ -->
+    <section class="seccion pt-0" aria-labelledby="directorio-titulo">
+      <div class="container">
+        <h2 id="directorio-titulo" class="visually-hidden">Directorio de tutores</h2>
+
+        <div class="barra-filtros">
+          <div class="chips" id="filtroAreas" role="group" aria-label="Filtrar por área"></div>
+          <div class="d-flex flex-wrap align-items-center gap-3 flex-grow-1 justify-content-lg-end">
+            <label class="buscador mb-0">
+              <span class="visually-hidden">Buscar tutor</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <input class="form-control" type="search" id="buscador" placeholder="Nombre, carrera o materia" autocomplete="off">
+            </label>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap align-items-center gap-3 py-3 filtros-secundarios">
+          <label class="d-flex align-items-center gap-2 mb-0">
+            <span class="txt-mono">Materia</span>
+            <select class="form-select form-select-sm" id="filtroMateria" style="max-width: 260px"></select>
+          </label>
+          <label class="d-flex align-items-center gap-2 mb-0">
+            <span class="txt-mono">Modalidad</span>
+            <select class="form-select form-select-sm w-auto" id="filtroModalidad">
+              <option value="">Cualquiera</option>
+              <option value="presencial">Presencial</option>
+              <option value="virtual">Virtual</option>
+            </select>
+          </label>
+          <div class="form-check form-switch mb-0 d-flex align-items-center gap-2">
+            <input class="form-check-input" type="checkbox" role="switch" id="soloDisponibles">
+            <label class="form-check-label" for="soloDisponibles">Solo disponibles hoy</label>
+          </div>
+          <label class="d-flex align-items-center gap-2 mb-0 ms-lg-auto">
+            <span class="txt-mono">Orden</span>
+            <select class="form-select form-select-sm w-auto" id="orden">
+              <option value="calificacion">Mejor calificados</option>
+              <option value="sesiones">Más sesiones</option>
+              <option value="precio">Menor precio</option>
+              <option value="nombre">Nombre A–Z</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3">
+          <div class="d-flex flex-wrap align-items-center gap-3">
+            <span class="resultado-conteo" id="conteo" aria-live="polite"></span>
+            <span class="aviso-filtro" id="avisoMateria" hidden>
+              Materia: <strong data-nombre></strong>
+              <button type="button" aria-label="Quitar filtro de materia">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+            </span>
+          </div>
+          <button class="btn btn-linea btn-sm" type="button" id="limpiarFiltros">Limpiar filtros</button>
+        </div>
+
+        <div class="row g-5">
+          <div class="col-lg-9">
+            <div class="row g-4" id="listaTutores" data-stagger></div>
+          </div>
+          <div class="col-lg-3">
+            <aside class="aside-nota" aria-label="Cómo verificamos a los tutores">
+              <h3>Cómo los verificamos</h3>
+              <ul>
+                <li>Confirmamos que están matriculados en la UTP.</li>
+                <li>Revisamos que aprobaron la materia que ofrecen.</li>
+                <li>Entrevista de 15 minutos para conocer cómo explican.</li>
+                <li>Las calificaciones vienen solo de sesiones realizadas.</li>
+              </ul>
+              <hr class="my-4">
+              <h3>¿Quieres aparecer aquí?</h3>
+              <p class="txt-suave">Si aprobaste una materia y te gusta explicar, postúlate. Tú fijas horario y tarifa.</p>
+              <a class="btn btn-tinta btn-sm w-100 justify-content-center" href="contacto.html?rol=tutor">Postularme como tutor</a>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>

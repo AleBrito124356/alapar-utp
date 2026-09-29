@@ -1,0 +1,65 @@
+<!-- {"titulo": "Materias", "descripcion": "Catálogo de materias con tutores disponibles en la UTP: Cálculo, Física, Programación, Circuitos, Estática y más. Filtra por facultad y busca por tema.", "pagina": "materias"} -->
+
+    <!-- ============ CABECERA ============ -->
+    <section class="cabecera" aria-labelledby="titulo-pagina">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-9">
+            <span class="eyebrow">Catálogo</span>
+            <h1 id="titulo-pagina" class="reveal">Materias con tutores <mark>listos para ayudarte</mark></h1>
+            <p class="lead reveal">Filtra por facultad, busca por nombre o tema y mira cuánta demanda tiene cada materia esta semana.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CATÁLOGO ============ -->
+    <section class="seccion pt-0" aria-labelledby="catalogo-titulo">
+      <div class="container">
+        <h2 id="catalogo-titulo" class="visually-hidden">Catálogo de materias</h2>
+
+        <div class="barra-filtros">
+          <div class="chips" id="filtroAreas" role="group" aria-label="Filtrar por área"></div>
+          <div class="d-flex flex-wrap align-items-center gap-3 flex-grow-1 justify-content-lg-end">
+            <label class="buscador mb-0">
+              <span class="visually-hidden">Buscar materia</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <input class="form-control" type="search" id="buscador" placeholder="Buscar por nombre o tema (p. ej. derivadas)" autocomplete="off">
+            </label>
+            <label class="d-flex align-items-center gap-2 mb-0">
+              <span class="txt-mono">Orden</span>
+              <select class="form-select form-select-sm w-auto" id="orden">
+                <option value="demanda">Más pedidas</option>
+                <option value="nombre">Nombre A–Z</option>
+                <option value="semestre">Semestre</option>
+                <option value="tutores">Más tutores</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 py-3">
+          <span class="resultado-conteo" id="conteo" aria-live="polite"></span>
+          <button class="btn btn-linea btn-sm" type="button" id="limpiarFiltros">Limpiar filtros</button>
+        </div>
+
+        <div class="row g-5">
+          <div class="col-lg-9">
+            <div class="row g-3 g-lg-4" id="listaMaterias" data-stagger></div>
+          </div>
+          <div class="col-lg-3">
+            <aside class="aside-nota" aria-label="Información adicional">
+              <h3>¿No está tu materia?</h3>
+              <p class="txt-suave">Añadimos una materia cuando al menos un estudiante que la aprobó se ofrece como tutor. Pídela y la buscamos.</p>
+              <a class="btn btn-tinta btn-sm w-100 justify-content-center mb-4" href="contacto.html">Pedir una materia</a>
+              <h3>Cómo leer la demanda</h3>
+              <ul>
+                <li>Las barras amarillas muestran cuántas solicitudes tuvo la materia esta semana.</li>
+                <li>Con demanda alta conviene agendar con dos o tres días de anticipación.</li>
+                <li>El número de tutores se actualiza cada vez que verificamos a uno nuevo.</li>
+              </ul>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>

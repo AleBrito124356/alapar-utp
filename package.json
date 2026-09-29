@@ -1,0 +1,16 @@
+{
+  "name": "alapar-utp",
+  "version": "1.1.0",
+  "private": true,
+  "description": "A la Par: tutorías entre estudiantes de la UTP. Proyecto N.º 1 de Ingeniería Web.",
+  "type": "module",
+  "scripts": {
+    "paginas": "node build.mjs",
+    "servir": "npx --yes http-server . -p 5183 -c-1",
+    "prueba": "node pruebas/carrito.e2e.mjs http://localhost:5183/",
+    "capturas": "node pruebas/carrito.e2e.mjs http://localhost:5183/ docs/capturas"
+  },
+  "devDependencies": {
+    "playwright": "1.49.1"
+  }
+}

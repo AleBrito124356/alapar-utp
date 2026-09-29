@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nosotros · A la Par — Tutorías entre estudiantes de la UTP</title>
+  <meta name="description" content="Quiénes hacemos A la Par, qué necesidad resolvemos y la ficha técnica del proyecto de Ingeniería Web de la UTP.">
+  <meta name="author" content="Luis Amaral, Alejandro Brito Olivera, Marcos Gaitán, Pedro Garay y David González">
+  <meta name="theme-color" content="#fbf7ef">
+  <link rel="canonical" href="https://alapar-utp.vercel.app/nosotros">
+
+  <!-- Vista previa al compartir el enlace -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="A la Par">
+  <meta property="og:locale" content="es_PA">
+  <meta property="og:title" content="Nosotros · A la Par">
+  <meta property="og:description" content="Quiénes hacemos A la Par, qué necesidad resolvemos y la ficha técnica del proyecto de Ingeniería Web de la UTP.">
+  <meta property="og:url" content="https://alapar-utp.vercel.app/nosotros">
+  <meta property="og:image" content="https://alapar-utp.vercel.app/assets/img/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <!-- Tipografías: Young Serif (títulos), Instrument Sans (texto), DM Mono (etiquetas) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Young+Serif&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 (local) + estilos propios -->
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  
+</head>
+<body data-pagina="nosotros" class="con-nav-solido">
+  <a class="salto" href="#contenido">Saltar al contenido</a>
+
+  <!-- ============ CABECERA / NAVEGACIÓN ============ -->
+  <header class="nav-ap nav-ap--solida" id="cabecera">
+    <nav class="navbar" aria-label="Navegación principal">
+      <div class="container">
+        <a class="marca-ap" href="index.html" aria-label="A la Par, ir al inicio">
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+            <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+            <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span>a la par</span>
+        </a>
+
+        <ul class="navbar-nav d-none d-lg-flex flex-row align-items-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="como-funciona.html">Cómo funciona</a></li>
+          <li class="nav-item"><a class="nav-link" href="materias.html">Materias</a></li>
+          <li class="nav-item"><a class="nav-link" href="tutores.html">Tutores</a></li>
+          <li class="nav-item"><a class="nav-link active" aria-current="page" href="nosotros.html">Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <button class="boton-carrito" type="button" data-carrito-boton data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral" aria-label="Carrito vacío">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.4a1.6 1.6 0 0 0 1.5-1.2L20.5 8H6.1"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>
+            <span class="boton-carrito__num" data-carrito-num hidden>0</span>
+          </button>
+          <a class="btn btn-tinta btn-cta d-none d-sm-inline-flex" href="tutores.html">
+            Buscar tutor
+            <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <button class="hamburguesa d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menú">
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Menú lateral para pantallas pequeñas (offcanvas de Bootstrap) -->
+  <div class="offcanvas offcanvas-end menu-lateral" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralTitulo">
+    <div class="offcanvas-header">
+      <span class="marca-ap" id="menuLateralTitulo">
+        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+          <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+          <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>a la par</span>
+      </span>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar menú"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <nav aria-label="Navegación móvil">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="index.html"><small>01</small>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="como-funciona.html"><small>02</small>Cómo funciona</a></li>
+          <li class="nav-item"><a class="nav-link" href="materias.html"><small>03</small>Materias</a></li>
+          <li class="nav-item"><a class="nav-link" href="tutores.html"><small>04</small>Tutores</a></li>
+          <li class="nav-item"><a class="nav-link active" href="nosotros.html"><small>05</small>Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html"><small>06</small>Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrito.html"><small>07</small>Carrito</a></li>
+        </ul>
+      </nav>
+      <div class="mt-auto pt-4">
+        <a class="btn btn-tinta w-100 justify-content-center" href="tutores.html">Buscar tutor</a>
+        <p class="txt-mono txt-suave mt-3 mb-0">Tutorías entre pares · UTP</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito: panel lateral con las horas elegidas (lo pinta js/carrito.js) -->
+  <div class="offcanvas offcanvas-end carrito-lateral" tabindex="-1" id="carritoLateral" aria-labelledby="carritoLateralTitulo" data-carrito-zona>
+    <div class="offcanvas-header">
+      <div>
+        <span class="eyebrow">Tu carrito</span>
+        <h2 class="carrito-lateral__titulo" id="carritoLateralTitulo" tabindex="-1" data-carrito-titulo>Horas de tutoría</h2>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar carrito"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="carrito-vacio" data-si-vacio>
+        <p class="carrito-vacio__titulo">Todavía no hay horas aquí.</p>
+        <p class="txt-suave">Elige un tutor, la materia y cuántas horas necesitas. Todo se guarda en este navegador hasta que confirmes.</p>
+        <a class="btn btn-tinta btn-sm" href="tutores.html">Buscar tutor
+          <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <ul class="lista-carrito" data-carrito-lista aria-label="Sesiones en el carrito"></ul>
+    </div>
+    <div class="carrito-lateral__pie" data-si-lleno hidden>
+      <div data-carrito-resumen></div>
+      <a class="btn btn-tinta w-100 justify-content-center mt-3" href="carrito.html">Revisar y reservar
+        <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <p class="carrito-lateral__nota">No cobramos en línea: pagas a tu tutor al terminar cada sesión.</p>
+    </div>
+  </div>
+  <p class="visually-hidden" id="carritoAnuncio" role="status" aria-live="polite"></p>
+
+  <main id="contenido">
+
+<!-- ============ CABECERA ============ -->
+    <section class="cabecera cabecera--con-linea" aria-labelledby="titulo-pagina">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-10">
+            <span class="eyebrow">Nosotros</span>
+            <h1 id="titulo-pagina" class="reveal">Nació en un pasillo de la FISC, <mark>en semana de parciales</mark>.</h1>
+            <p class="lead reveal">A la Par es una iniciativa de cinco estudiantes de Ingeniería de Software de la UTP que se cansaron de ver a sus compañeros estudiar solos lo que alguien, dos mesas más allá, ya sabía explicar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LA NECESIDAD ============ -->
+    <section class="seccion" id="necesidad" aria-labelledby="necesidad-titulo">
+      <div class="container">
+        <div class="row g-5 align-items-center">
+          <div class="col-lg-6">
+            <div class="position-relative reveal reveal--izq">
+              <figure class="marco">
+                <img src="assets/img/campus.webp" alt="Edificio moderno de un campus universitario tropical, con pasillos cubiertos y palmeras" width="1920" height="1080" loading="lazy" decoding="async">
+              </figure>
+              <span class="pegatina" style="--rot:-3deg; left:1.2rem; bottom:-0.8rem">Mismo campus, misma materia</span>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <span class="eyebrow">La necesidad</span>
+            <h2 id="necesidad-titulo" class="reveal">El conocimiento ya está en el campus. <mark>Está mal repartido.</mark></h2>
+            <p class="lead reveal mt-4">Cada semestre, muchos estudiantes de ingeniería arrastran materias básicas no porque no puedan, sino porque nadie les explicó a tiempo y de la forma correcta.</p>
+            <p class="reveal">Las opciones que existen no resuelven el problema: las horas de consulta del profesor son pocas para grupos grandes, las academias particulares cobran tarifas pensadas para otro bolsillo y los grupos de WhatsApp dependen de que alguien tenga tiempo justo cuando tú tienes la duda.</p>
+            <p class="reveal">A la Par pone en contacto a quien necesita ayuda con quien acaba de aprobar esa misma materia, con el mismo profesor, a un precio que un estudiante puede pagar o incluso sin dinero, por intercambio.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ PROPUESTA ============ -->
+    <section class="seccion seccion--papel-2" id="propuesta" aria-labelledby="propuesta-titulo">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-lg-7">
+            <span class="eyebrow">Nuestra propuesta</span>
+            <h2 id="propuesta-titulo" class="reveal">Lo que hace <mark>diferente</mark> a A la Par</h2>
+          </div>
+        </div>
+        <div class="row g-4" data-stagger>
+          <div class="col-md-6 col-xl-3 reveal">
+            <article class="tarjeta tarjeta__cuerpo valor">
+              <span class="valor__icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 19c.6-3 3.2-5 6.5-5s5.9 2 6.5 5M15 15.5c2.8 0 5 1.5 5.5 3.5"/></svg>
+              </span>
+              <h3>Pares, no profesores</h3>
+              <p>Quien te explica cursó la materia hace uno o dos semestres. Recuerda exactamente dónde se atoró y cómo lo resolvió.</p>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-3 reveal">
+            <article class="tarjeta tarjeta__cuerpo valor">
+              <span class="valor__icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M8 7.5h5.5a2.5 2.5 0 0 1 0 5H10a2.5 2.5 0 0 0 0 5h6"/></svg>
+              </span>
+              <h3>Precio de estudiante</h3>
+              <p>Entre $5 y $8 la hora, o intercambio de materias sin dinero. Una academia cobra cuatro veces más.</p>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-3 reveal">
+            <article class="tarjeta tarjeta__cuerpo valor">
+              <span class="valor__icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z"/><path d="m9 12 2 2 4-4"/></svg>
+              </span>
+              <h3>Verificación real</h3>
+              <p>Matrícula vigente, materia aprobada y una entrevista. Las calificaciones solo salen de sesiones realizadas.</p>
+            </article>
+          </div>
+          <div class="col-md-6 col-xl-3 reveal">
+            <article class="tarjeta tarjeta__cuerpo valor">
+              <span class="valor__icono" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+              </span>
+              <h3>Presencial o virtual</h3>
+              <p>En la biblioteca, en la cafetería o por videollamada. Cada tutor indica qué modalidad ofrece.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CIFRAS ============ -->
+    <section class="seccion seccion--compacta" id="cifras" aria-label="Cifras de la plataforma">
+      <div class="container">
+        <div class="row g-4" id="estadisticas" data-stagger></div>
+      </div>
+    </section>
+
+    <!-- ============ EQUIPO ============ -->
+    <section class="seccion seccion--papel-2" id="equipo" aria-labelledby="equipo-titulo">
+      <div class="container">
+        <div class="row g-4 align-items-end mb-5">
+          <div class="col-lg-7">
+            <span class="eyebrow">El equipo</span>
+            <h2 id="equipo-titulo" class="reveal">Cinco estudiantes y <mark>un problema</mark> que conocen de cerca</h2>
+          </div>
+          <div class="col-lg-5">
+            <p class="reveal mb-0">Los cinco cursan Ingeniería de Software en la Facultad de Ingeniería de Sistemas Computacionales de la Universidad Tecnológica de Panamá, grupo 1SF134.</p>
+          </div>
+        </div>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-5 g-4 equipo" data-stagger>
+          <div class="col reveal">
+            <article class="tarjeta tarjeta__cuerpo persona">
+              <div class="persona__avatar" style="--rot:-5deg" aria-hidden="true">LA</div>
+              <h3>Luis Amaral</h3>
+              <p class="txt-suave mb-2">Ing. de Software · UTP</p>
+              <p class="mb-0">Carrito de reservas: reglas de precio, descuento por paquete y flujo de confirmación.</p>
+            </article>
+          </div>
+          <div class="col reveal">
+            <article class="tarjeta tarjeta__cuerpo persona">
+              <div class="persona__avatar persona__avatar--marcador" style="--rot:3deg" aria-hidden="true">AB</div>
+              <h3>Alejandro Brito Olivera</h3>
+              <p class="txt-suave mb-2">Ing. de Software · UTP</p>
+              <p class="mb-0">Identidad visual, arquitectura del sitio y desarrollo front-end con POO en JavaScript.</p>
+            </article>
+          </div>
+          <div class="col reveal">
+            <article class="tarjeta tarjeta__cuerpo persona">
+              <div class="persona__avatar persona__avatar--azul" style="--rot:-3deg" aria-hidden="true">MG</div>
+              <h3>Marcos Gaitán</h3>
+              <p class="txt-suave mb-2">Ing. de Software · UTP</p>
+              <p class="mb-0">Investigación de la necesidad y contenidos del catálogo de materias y tutores.</p>
+            </article>
+          </div>
+          <div class="col reveal">
+            <article class="tarjeta tarjeta__cuerpo persona">
+              <div class="persona__avatar persona__avatar--papel" style="--rot:4deg" aria-hidden="true">PG</div>
+              <h3>Pedro Garay</h3>
+              <p class="txt-suave mb-2">Ing. de Software · UTP</p>
+              <p class="mb-0">Diseño responsive y pruebas en teléfonos, tabletas y navegadores.</p>
+            </article>
+          </div>
+          <div class="col reveal">
+            <article class="tarjeta tarjeta__cuerpo persona">
+              <div class="persona__avatar persona__avatar--verde" style="--rot:-4deg" aria-hidden="true">DG</div>
+              <h3>David González</h3>
+              <p class="txt-suave mb-2">Ing. de Software · UTP</p>
+              <p class="mb-0">Validación de formularios, documentación y publicación en Vercel y GitHub.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ EL PROYECTO ============ -->
+    <section class="seccion" id="proyecto" aria-labelledby="proyecto-titulo">
+      <div class="container">
+        <div class="row g-5">
+          <div class="col-lg-6">
+            <span class="eyebrow">El proyecto</span>
+            <h2 id="proyecto-titulo" class="reveal">Ficha técnica</h2>
+            <p class="reveal mt-3">Este sitio es el Proyecto N.º 1 de la asignatura Ingeniería Web. El objetivo era diseñar e implementar un sitio completo que resolviera una necesidad real usando HTML5, CSS3, Bootstrap, programación orientada a objetos y diseño responsive, y publicarlo en un hosting gratuito.</p>
+            <dl class="ficha reveal mt-4">
+              <dt>Asignatura</dt><dd>Ingeniería Web · Licenciatura en Ingeniería de Software</dd>
+              <dt>Facilitadora</dt><dd>Dra. Denis Cedeño</dd>
+              <dt>Universidad</dt><dd>Universidad Tecnológica de Panamá · Facultad de Ingeniería de Sistemas Computacionales</dd>
+              <dt>Entrega</dt><dd><time datetime="2026-09-29">29 de septiembre de 2026</time></dd>
+              <dt>Equipo</dt><dd>Luis Amaral, Alejandro Brito Olivera, Marcos Gaitán, Pedro Garay y David González</dd>
+              <dt>Tecnologías</dt><dd>HTML5 semántico, CSS3 (variables, grid, animaciones), Bootstrap 5.3, JavaScript ES2022 con clases, herencia y campos privados (POO), <code>localStorage</code> para el carrito y las reservas, diseño responsive</dd>
+              <dt>Hosting</dt><dd>Vercel, plan gratuito</dd>
+              <dt>Código</dt><dd><a href="https://github.com/AleBrito124356/alapar-utp">github.com/AleBrito124356/alapar-utp</a></dd>
+            </dl>
+          </div>
+          <div class="col-lg-5 offset-lg-1">
+            <aside class="aside-nota" aria-label="Hoja de ruta del proyecto">
+              <h3>Hoja de ruta</h3>
+              <ol class="linea-tiempo mt-3">
+                <li class="is-hecho">
+                  <strong>Proyecto 1 · Sitio estático</strong>
+                  <span>Identidad, siete páginas, catálogo con POO en JavaScript, carrito de reservas y formularios con validación en vivo.</span>
+                </li>
+                <li>
+                  <strong>Proyecto 2 · Base de datos</strong>
+                  <span>Registro de tutores y estudiantes, reservas y solicitudes guardadas en MySQL y panel de administración.</span>
+                </li>
+                <li>
+                  <strong>Después · Agenda y reseñas</strong>
+                  <span>Calendario de disponibilidad, confirmación automática y calificaciones verificadas.</span>
+                </li>
+              </ol>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ PIE DE PÁGINA ============ -->
+  <footer class="pie" id="pie">
+    <div class="container">
+      <div class="row g-4 g-lg-5">
+        <div class="col-lg-4">
+          <a class="marca-ap" href="index.html" aria-label="A la Par, ir al inicio">
+            <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+              <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+              <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+              <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span>a la par</span>
+          </a>
+          <p class="pie__descripcion">Tutorías entre estudiantes de la Universidad Tecnológica de Panamá. Aprende a la par de quien ya aprobó la materia.</p>
+        </div>
+
+        <nav class="col-6 col-lg-2" aria-label="Mapa del sitio">
+          <h4>Sitio</h4>
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="como-funciona.html">Cómo funciona</a></li>
+            <li><a href="materias.html">Materias</a></li>
+            <li><a href="tutores.html">Tutores</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="carrito.html">Carrito</a></li>
+          </ul>
+        </nav>
+
+        <div class="col-6 col-lg-3">
+          <h4>Contacto</h4>
+          <address>
+            Campus Dr. Víctor Levi Sasso<br>
+            Ciudad de Panamá, Panamá<br>
+            <a href="mailto:hola@alapar.app">hola@alapar.app</a><br>
+            <a href="tel:+50760000000">+507 6000-0000</a>
+          </address>
+        </div>
+
+        <div class="col-lg-3">
+          <h4>Proyecto académico</h4>
+          <ul>
+            <li>Ingeniería Web · Proyecto N.º 1</li>
+            <li>Facultad de Ingeniería de Sistemas Computacionales</li>
+            <li>Universidad Tecnológica de Panamá · 2026</li>
+            <li><a href="nosotros.html#proyecto">Ficha técnica del proyecto</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pie__aviso">
+        <span>© 2026 A la Par · Luis Amaral, Alejandro Brito Olivera, Marcos Gaitán, Pedro Garay y David González</span>
+        <span>Iniciativa estudiantil. No es un sitio oficial de la UTP.</span>
+      </div>
+
+      <p class="pie__gigante" aria-hidden="true">a la par</p>
+    </div>
+  </footer>
+
+  <!-- Ventana para reservar horas con un tutor (la rellena js/carrito.js) -->
+  <div class="modal fade modal-reserva" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <form class="modal-content" novalidate>
+        <div class="modal-header">
+          <div class="modal-reserva__tutor" data-reserva="tutor"><h2 class="modal-title" id="modalReservaTitulo">Reservar horas</h2></div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label" for="reservaMateria">Materia</label>
+            <select class="form-select" id="reservaMateria" name="materia"></select>
+          </div>
+          <fieldset class="mb-3">
+            <legend class="form-label">Modalidad</legend>
+            <div class="row g-2" data-reserva="modalidades"></div>
+          </fieldset>
+          <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+            <div>
+              <span class="form-label d-block" id="reservaHorasEtiqueta">Horas</span>
+              <div class="contador-horas contador-horas--grande" role="group" aria-labelledby="reservaHorasEtiqueta">
+                <button type="button" data-horas="-1" aria-label="Una hora menos">−</button>
+                <output id="reservaHoras" aria-live="polite">1 h</output>
+                <button type="button" data-horas="1" aria-label="Una hora más">+</button>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="txt-mono txt-suave d-block">Importe</span>
+              <strong class="modal-reserva__importe" data-reserva="importe">$0.00</strong>
+              <span class="small txt-suave d-block" data-reserva="calculo"></span>
+            </div>
+          </div>
+          <p class="small txt-suave mt-3 mb-0" data-reserva="horario"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-linea" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-tinta">Añadir al carrito
+            <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Aviso flotante reutilizable -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="avisoGlobal" class="toast align-items-center" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Bootstrap + capas propias (datos → modelos → interfaz → validación → carrito → páginas) -->
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="js/datos.js" defer></script>
+  <script src="js/modelos.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/validacion.js" defer></script>
+  <script src="js/carrito.js" defer></script>
+  <script src="js/paginas.js" defer></script>
+</body>
+</html>

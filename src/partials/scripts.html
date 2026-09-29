@@ -1,0 +1,65 @@
+
+  <!-- Ventana para reservar horas con un tutor (la rellena js/carrito.js) -->
+  <div class="modal fade modal-reserva" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <form class="modal-content" novalidate>
+        <div class="modal-header">
+          <div class="modal-reserva__tutor" data-reserva="tutor"><h2 class="modal-title" id="modalReservaTitulo">Reservar horas</h2></div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label" for="reservaMateria">Materia</label>
+            <select class="form-select" id="reservaMateria" name="materia"></select>
+          </div>
+          <fieldset class="mb-3">
+            <legend class="form-label">Modalidad</legend>
+            <div class="row g-2" data-reserva="modalidades"></div>
+          </fieldset>
+          <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+            <div>
+              <span class="form-label d-block" id="reservaHorasEtiqueta">Horas</span>
+              <div class="contador-horas contador-horas--grande" role="group" aria-labelledby="reservaHorasEtiqueta">
+                <button type="button" data-horas="-1" aria-label="Una hora menos">−</button>
+                <output id="reservaHoras" aria-live="polite">1 h</output>
+                <button type="button" data-horas="1" aria-label="Una hora más">+</button>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="txt-mono txt-suave d-block">Importe</span>
+              <strong class="modal-reserva__importe" data-reserva="importe">$0.00</strong>
+              <span class="small txt-suave d-block" data-reserva="calculo"></span>
+            </div>
+          </div>
+          <p class="small txt-suave mt-3 mb-0" data-reserva="horario"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-linea" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-tinta">Añadir al carrito
+            <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Aviso flotante reutilizable -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="avisoGlobal" class="toast align-items-center" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Bootstrap + capas propias (datos → modelos → interfaz → validación → carrito → páginas) -->
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="js/datos.js" defer></script>
+  <script src="js/modelos.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/validacion.js" defer></script>
+  <script src="js/carrito.js" defer></script>
+  <script src="js/paginas.js" defer></script>
+</body>
+</html>
