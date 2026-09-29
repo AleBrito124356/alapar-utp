@@ -43,6 +43,30 @@
     </div>
   </div>
 
+  <!-- Caja: pago simulado de una reserva (la anima js/caja.js) -->
+  <div class="modal fade modal-caja" id="modalCaja" tabindex="-1" aria-labelledby="cajaTitulo" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-md-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">Caja · pago simulado</span>
+            <h2 class="modal-title" id="cajaTitulo" tabindex="-1">Paga tu reserva</h2>
+          </div>
+          <button type="button" class="btn-close" data-caja-cerrar aria-label="Cerrar la caja"></button>
+        </div>
+        <div class="modal-body caja" data-caja-fase="metodo">
+          <div class="caja__recibo" data-caja="recibo"></div>
+          <div class="caja__panel" data-caja="panel"></div>
+        </div>
+        <p class="visually-hidden" role="status" aria-live="polite" data-caja="anuncio"></p>
+      </div>
+    </div>
+  </div>
+  <!-- Textura de tinta del sello «Pagado» -->
+  <svg class="visually-hidden" aria-hidden="true" focusable="false">
+    <filter id="tinta-sello"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="ruido"/><feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.6"/></filter>
+  </svg>
+
   <!-- Aviso flotante reutilizable -->
   <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="avisoGlobal" class="toast align-items-center" role="status" aria-live="polite" aria-atomic="true">
@@ -59,7 +83,10 @@
   <script src="js/modelos.js" defer></script>
   <script src="js/ui.js" defer></script>
   <script src="js/validacion.js" defer></script>
+  <script src="js/sesion.js" defer></script>
   <script src="js/carrito.js" defer></script>
+  <script src="js/caja.js" defer></script>
+  <script src="js/admin.js" defer></script>
   <script src="js/paginas.js" defer></script>
 </body>
 </html>

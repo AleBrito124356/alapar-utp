@@ -1,4 +1,4 @@
-<!-- {"titulo": "Carrito", "descripcion": "Revisa las horas de tutoría que elegiste, ajusta la duración y confirma tu reserva. Pagas al tutor al terminar cada sesión o por intercambio de materias.", "pagina": "carrito"} -->
+<!-- {"titulo": "Carrito", "descripcion": "Revisa las horas de tutoría que elegiste, ajusta la duración, entra con tu cuenta y paga tu reserva en la caja simulada.", "pagina": "carrito"} -->
 
     <!-- ============ CABECERA ============ -->
     <section class="cabecera" aria-labelledby="titulo-pagina">
@@ -7,7 +7,7 @@
           <div class="col-lg-9">
             <span class="eyebrow">Carrito</span>
             <h1 id="titulo-pagina" class="reveal">Tus horas de tutoría, <mark>listas para reservar</mark>.</h1>
-            <p class="lead reveal">Ajusta cuántas horas quieres con cada tutor y confirma. Te escriben en menos de 24 horas para fijar el día, y pagas al terminar cada sesión, nunca por adelantado.</p>
+            <p class="lead reveal">Ajusta cuántas horas quieres con cada tutor, entra con tu cuenta y paga en la caja. El tutor te escribe en menos de 24 horas para fijar el día.</p>
           </div>
         </div>
       </div>
@@ -16,6 +16,18 @@
     <!-- ============ CARRITO ============ -->
     <section class="seccion pt-2" aria-label="Carrito y reserva">
       <div class="container">
+
+        <!-- Aviso tras cerrar la caja: reserva pagada o pendiente -->
+        <div class="aviso-reserva" id="avisoReserva" role="status" hidden>
+          <span class="aviso-reserva__icono" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+          </span>
+          <div class="flex-grow-1">
+            <strong data-aviso-titulo></strong>
+            <span class="d-block txt-suave" data-aviso-texto></span>
+          </div>
+          <a class="btn btn-tinta btn-sm" href="mi-cuenta.html">Ver mis reservas</a>
+        </div>
 
         <!-- Carrito con sesiones -->
         <div class="row g-5" id="carritoLleno" hidden>
@@ -31,85 +43,81 @@
               </a>
             </div>
 
-            <div class="panel-formulario">
-              <h2 class="h3 mb-4" id="datos-titulo">Tus datos y el pago</h2>
+            <div class="panel-formulario" id="panelDatos">
+              <h2 class="h3 mb-3" id="datos-titulo">Tus datos</h2>
 
-              <form id="formularioReserva" action="#" method="post" novalidate autocomplete="on" aria-labelledby="datos-titulo">
-                <div class="row g-3">
-                  <div class="col-md-6" data-campo="nombre">
-                    <label class="form-label" for="nombre">Nombre completo</label>
-                    <input class="form-control" type="text" id="nombre" name="nombre" placeholder="Ej.: Ana Pérez" required minlength="3" autocomplete="name">
-                    <div class="invalid-feedback"></div>
-                  </div>
+              <!-- Sin sesión: se entra sin perder el carrito -->
+              <div class="acceso-requerido" id="accesoRequerido" hidden>
+                <p class="mb-3">Para guardar la reserva y pagarla necesitas entrar con tu cuenta. El carrito te espera aquí mismo.</p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a class="btn btn-tinta" href="entrar.html?siguiente=carrito.html">Entrar o crear cuenta
+                    <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                  <button class="btn btn-linea" type="button" id="entrarDemo">Probar con la cuenta demo de estudiante</button>
+                </div>
+              </div>
 
-                  <div class="col-md-6" data-campo="correo">
-                    <label class="form-label" for="correo">Correo</label>
-                    <input class="form-control" type="email" id="correo" name="correo" placeholder="nombre@utp.ac.pa" required autocomplete="email" inputmode="email">
-                    <div class="invalid-feedback"></div>
-                  </div>
+              <!-- Sin servidor (sitio abierto con doble clic u hosting sin base de datos) -->
+              <div class="acceso-requerido acceso-requerido--aviso" id="sinServidor" hidden>
+                <p class="mb-0">Para reservar hace falta el servidor con la base de datos. Abre el sitio publicado en <a href="https://alapar-utp.vercel.app/carrito">alapar-utp.vercel.app</a> o ejecuta <code>npm run dev</code>.</p>
+              </div>
 
-                  <div class="col-md-6" data-campo="telefono">
-                    <label class="form-label" for="telefono">WhatsApp</label>
-                    <input class="form-control" type="tel" id="telefono" name="telefono" placeholder="6XXX-XXXX" required autocomplete="tel" inputmode="tel">
-                    <div class="form-text">Por aquí te escribe el tutor para fijar la hora.</div>
-                    <div class="invalid-feedback"></div>
-                  </div>
+              <!-- Con sesión -->
+              <div id="datosReserva" hidden>
+                <p class="reserva-a-nombre">
+                  <span class="reserva-a-nombre__avatar" aria-hidden="true" data-sesion-iniciales></span>
+                  <span>Reservas como <strong data-sesion-nombre></strong><span class="d-block txt-suave small" data-sesion-correo></span></span>
+                  <button class="btn btn-linea btn-sm ms-auto" type="button" data-sesion-salir>No soy yo</button>
+                </p>
 
-                  <div class="col-md-6" data-campo="ofrece" data-grupo="intercambio" hidden>
-                    <label class="form-label" for="ofrece">Materia que das a cambio</label>
-                    <select class="form-select" id="ofrece" name="ofrece">
-                      <option value="" selected disabled>Elige la materia que dominas…</option>
-                    </select>
-                    <div class="form-text">Tu carrito incluye horas por intercambio.</div>
-                    <div class="invalid-feedback"></div>
-                  </div>
-
-                  <div class="col-12" data-campo="pago" data-grupo="pago">
-                    <fieldset>
-                      <legend class="form-label">¿Cómo le pagas al tutor?</legend>
-                      <div class="row g-2">
-                        <div class="col-sm-6 opcion-rol">
-                          <input type="radio" id="pago-yappy" name="pago" value="yappy">
-                          <label for="pago-yappy"><strong>Yappy</strong><small>Al terminar cada sesión</small></label>
-                        </div>
-                        <div class="col-sm-6 opcion-rol">
-                          <input type="radio" id="pago-efectivo" name="pago" value="efectivo">
-                          <label for="pago-efectivo"><strong>Efectivo</strong><small>En mano, al terminar la sesión</small></label>
-                        </div>
-                      </div>
-                      <div class="invalid-feedback"></div>
-                    </fieldset>
-                  </div>
-
-                  <div class="col-12" data-campo="disponibilidad">
-                    <label class="form-label" for="disponibilidad">¿Qué días y a qué horas puedes?</label>
-                    <textarea class="form-control" id="disponibilidad" name="disponibilidad" rows="3" placeholder="Ej.: martes y jueves después de las 4:00 p. m.; el parcial es el viernes 9." required minlength="10" maxlength="300"></textarea>
-                    <div class="invalid-feedback"></div>
-                  </div>
-
-                  <div class="col-12" data-campo="acepto">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="acepto" name="acepto" required>
-                      <label class="form-check-label" for="acepto">Entiendo que el tutor confirma el horario y que el pago se hace al terminar cada sesión, no en esta página.</label>
+                <form id="formularioReserva" action="#" method="post" novalidate autocomplete="on" aria-labelledby="datos-titulo">
+                  <div class="row g-3">
+                    <div class="col-md-6" data-campo="telefono">
+                      <label class="form-label" for="telefono">WhatsApp</label>
+                      <input class="form-control" type="tel" id="telefono" name="telefono" placeholder="6XXX-XXXX" required autocomplete="tel" inputmode="tel">
+                      <div class="form-text">Por aquí te escribe el tutor. En esta demostración usa un número inventado: la cuenta de administración demo es pública.</div>
                       <div class="invalid-feedback"></div>
                     </div>
-                  </div>
 
-                  <!-- Campo trampa para bots: las personas no lo ven ni lo llenan -->
-                  <div class="visually-hidden" aria-hidden="true">
-                    <label for="sitio">Sitio web</label>
-                    <input type="text" id="sitio" name="sitio" tabindex="-1" autocomplete="off">
-                  </div>
+                    <div class="col-md-6" data-campo="ofrece" data-grupo="intercambio" hidden>
+                      <label class="form-label" for="ofrece">Materia que das a cambio</label>
+                      <select class="form-select" id="ofrece" name="ofrece">
+                        <option value="" selected disabled>Elige la materia que dominas…</option>
+                      </select>
+                      <div class="form-text">Tu carrito incluye horas por intercambio.</div>
+                      <div class="invalid-feedback"></div>
+                    </div>
 
-                  <div class="col-12 d-flex flex-wrap align-items-center gap-3 mt-4">
-                    <button class="btn btn-tinta btn-lg" type="submit">
-                      Confirmar reserva
-                      <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                    </button>
-                    <span class="small txt-suave">Todavía no hay base de datos: la reserva se valida y queda registrada en tu navegador.</span>
+                    <div class="col-12" data-campo="disponibilidad">
+                      <label class="form-label" for="disponibilidad">¿Qué días y a qué horas puedes?</label>
+                      <textarea class="form-control" id="disponibilidad" name="disponibilidad" rows="3" placeholder="Ej.: martes y jueves después de las 4:00 p. m.; el parcial es el viernes 9." required minlength="10" maxlength="300"></textarea>
+                      <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="col-12" data-campo="acepto">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="acepto" name="acepto" required>
+                        <label class="form-check-label" for="acepto">Entiendo que es una demostración: el pago es simulado y no se cobra dinero real.</label>
+                        <div class="invalid-feedback"></div>
+                      </div>
+                    </div>
+
+                    <!-- Campo trampa para bots: las personas no lo ven ni lo llenan -->
+                    <div class="visually-hidden" aria-hidden="true">
+                      <label for="sitio">Sitio web</label>
+                      <input type="text" id="sitio" name="sitio" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="col-12 d-flex flex-wrap align-items-center gap-3 mt-4">
+                      <button class="btn btn-tinta btn-lg" type="submit">
+                        Continuar al pago
+                        <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                      </button>
+                      <span class="small txt-suave">La reserva se guarda en tu cuenta; si no la pagas ahora, queda pendiente.</span>
+                    </div>
                   </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
           </div>
 
@@ -121,7 +129,7 @@
               <ul class="lista-marcador">
                 <li>A partir de 4 horas pagadas en una misma reserva, el paquete de parcial te descuenta un 10 %.</li>
                 <li>Con los tutores de intercambio no hay dinero: das una hora de una materia que dominas por cada hora que recibes.</li>
-                <li>Si tu primera sesión con un tutor no te sirvió, te asignamos otro sin costo.</li>
+                <li>El importe final lo calcula el servidor con las tarifas vigentes.</li>
               </ul>
             </aside>
           </div>
@@ -140,33 +148,5 @@
           <h2 class="h3 mb-4">Los mejor calificados esta semana</h2>
           <div class="row g-4" id="tutoresSugeridos" data-stagger></div>
         </div>
-
-        <!-- Reserva confirmada -->
-        <div class="panel-formulario exito exito--reserva" id="exitoReserva" aria-live="polite">
-          <div class="exito__sello" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#10192b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-          </div>
-          <h2 class="h3" tabindex="-1">Reserva confirmada</h2>
-          <p class="lead">Gracias, <strong data-resumen="nombre"></strong>. Tus tutores te escribirán al <span data-resumen="telefono"></span> o a <span data-resumen="correo"></span> en menos de 24 horas para fijar el día.</p>
-          <dl class="resumen-solicitud row g-0 mb-3">
-            <div class="col-sm-6"><dt>Folio</dt><dd data-resumen="folio"></dd></div>
-            <div class="col-sm-6"><dt>Fecha</dt><dd data-resumen="fecha"></dd></div>
-            <div class="col-sm-6"><dt>Horas</dt><dd data-resumen="horas"></dd></div>
-            <div class="col-sm-6"><dt>Total</dt><dd data-resumen="total"></dd></div>
-            <div class="col-12"><dt>Pago</dt><dd data-resumen="pago"></dd></div>
-          </dl>
-          <ul class="sesiones-confirmadas mb-4" data-resumen="sesiones" aria-label="Sesiones reservadas"></ul>
-          <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-tinta" href="tutores.html">Seguir buscando tutores</a>
-            <button class="btn btn-linea" type="button" id="imprimirReserva">Imprimir comprobante</button>
-          </div>
-        </div>
-
-        <!-- Historial en este navegador -->
-        <section class="historial-reservas mt-5" id="historial" aria-labelledby="historial-titulo" hidden>
-          <span class="eyebrow">En este navegador</span>
-          <h2 class="h3" id="historial-titulo">Tus reservas anteriores</h2>
-          <ul class="lista-reservas" id="listaHistorial"></ul>
-        </section>
       </div>
     </section>

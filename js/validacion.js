@@ -118,6 +118,12 @@ class CampoFormulario {
     return mensaje === null;
   }
 
+  /** Muestra un error que viene de fuera del formulario (por ejemplo, del servidor). */
+  marcarError(mensaje) {
+    this.#tocado = true;
+    this.#pintar(mensaje);
+  }
+
   limpiar() {
     this.#tocado = false;
     for (const c of this.#controles) {
@@ -130,12 +136,20 @@ class CampoFormulario {
 
   /** Validación en vivo: al salir del campo la primera vez, y en cada tecla después. */
   escuchar(alValidar) {
-    const eventoFinal = ["checkbox", "radio", "select-one"].includes(this.tipo) ? "change" : "blur";
+    const inmediato = ["checkbox", "radio", "select-one"].includes(this.tipo);
+    const eventoFinal = inmediato ? "change" : "blur";
     for (const control of this.#controles) {
       control.addEventListener(eventoFinal, () => {
-        this.#tocado = true;
-        this.validar();
-        alValidar?.(this);
+        const validar = () => {
+          this.#tocado = true;
+          this.validar();
+          alValidar?.(this);
+        };
+        // Al salir de un campo, su mensaje aparece un instante después. Si apareciera
+        // en el mismo mousedown, empujaría la página y el clic que va en camino (a otro
+        // campo o al botón de enviar) caería en el vacío.
+        if (inmediato) validar();
+        else window.setTimeout(validar, 200);
       });
       control.addEventListener("input", () => {
         if (!this.#tocado) return;

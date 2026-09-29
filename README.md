@@ -9,250 +9,309 @@ o se pagan por intercambio de materias, sin dinero de por medio.
 
 ![Portada de A la Par: «¿Te quedaste con dudas del parcial?», con dos estudiantes estudiando juntos](docs/capturas/01-inicio.jpg)
 
-Proyecto N.º 1 de **Ingeniería Web** (Licenciatura en Ingeniería de Software,
-Facultad de Ingeniería de Sistemas Computacionales, UTP), grupo 1SF134.
-Facilitadora: Dra. Denis Cedeño. Septiembre de 2026.
+Proyecto de **Ingeniería Web** (Licenciatura en Ingeniería de Software, Facultad de
+Ingeniería de Sistemas Computacionales, UTP), grupo 1SF134. Facilitadora: Dra. Denis
+Cedeño. Septiembre de 2026.
+
+> **Versión 2.** El sitio ya no es solo estático: tiene **servidor y base de datos
+> PostgreSQL**, **cuentas** con inicio de sesión, **cuentas de demostración** de
+> estudiante y de administración, una **caja de pago simulado** (Yappy, tarjeta de
+> prueba e intercambios) con su animación y un **panel de administración** con las
+> personas registradas y todas las compras.
 
 ---
 
 ## Índice
 
-1. [La necesidad](#la-necesidad)
+1. [Pruébalo: cuentas de demostración](#pruébalo-cuentas-de-demostración)
 2. [Qué hay en el sitio](#qué-hay-en-el-sitio)
-3. [El carrito de reservas](#el-carrito-de-reservas)
-4. [Cómo está hecho](#cómo-está-hecho)
-5. [Estructura del proyecto](#estructura-del-proyecto)
-6. [Cómo verlo y modificarlo](#cómo-verlo-y-modificarlo)
-7. [Cómo se probó](#cómo-se-probó)
-8. [Equipo y créditos](#equipo)
+3. [Cómo se reserva y se paga](#cómo-se-reserva-y-se-paga)
+4. [La caja y su animación](#la-caja-y-su-animación)
+5. [Panel de administración](#panel-de-administración)
+6. [Arquitectura](#arquitectura)
+7. [Base de datos](#base-de-datos)
+8. [API](#api)
+9. [Seguridad](#seguridad)
+10. [El frontend por dentro](#el-frontend-por-dentro)
+11. [Cómo ejecutarlo y publicarlo](#cómo-ejecutarlo-y-publicarlo)
+12. [Cómo se probó](#cómo-se-probó)
+13. [Equipo y créditos](#equipo)
 
 ---
 
-## La necesidad
+## Pruébalo: cuentas de demostración
 
-En las materias básicas de ingeniería muchos estudiantes llegan al parcial con
-dudas acumuladas. Las horas de consulta del profesor no alcanzan para grupos
-grandes, los grupos de WhatsApp responden tarde y las academias particulares
-cobran tarifas pensadas para otro bolsillo. En el mismo campus, dos mesas más
-allá, hay alguien que aprobó esa materia el semestre pasado y sabe exactamente
-dónde se atoró.
+| Cuenta | Correo | Contraseña | Qué puede hacer |
+| --- | --- | --- | --- |
+| Estudiante | `estudiante@alapar.demo` | `Estudiante2026` | Reservar, pagar en la caja simulada y ver sus reservas |
+| Administración | `admin@alapar.demo` | `Admin2026` | Todo lo anterior y el panel con personas registradas y compras |
 
-A la Par pone en contacto a esas dos personas: eliges materia y tutor, reservas
-las horas y estudias.
+En la página **Entrar** cada cuenta es una nota adhesiva: un toque y entras. También
+puedes **crear tu propia cuenta**. Como la cuenta de administración de demostración es
+pública, el formulario pide no usar un correo, una contraseña ni un teléfono reales.
+
+![Página Entrar: pestañas Entrar y Crear cuenta, y las cuentas de demostración como notas adhesivas](docs/capturas/15-entrar.jpg)
 
 ## Qué hay en el sitio
 
 | Página | Archivo | Qué se puede hacer |
 | --- | --- | --- |
-| Inicio | `index.html` | Portada con vídeo que avanza con el scroll, el problema, tres pasos, cifras animadas, materias y tutores destacados, testimonios |
-| Cómo funciona | `como-funciona.html` | El proceso paso a paso, requisitos para ser tutor, reglas de la comunidad y preguntas frecuentes |
+| Inicio | `index.html` | Portada con vídeo que avanza con el scroll, el problema, tres pasos, cifras, materias y tutores destacados, testimonios |
+| Cómo funciona | `como-funciona.html` | El proceso paso a paso, requisitos para ser tutor, reglas y preguntas frecuentes |
 | Materias | `materias.html` | Catálogo de 34 materias con filtros por facultad, búsqueda y orden |
-| Tutores | `tutores.html` | Directorio de 9 tutores con filtros por facultad, materia, modalidad y disponibilidad. Cada tarjeta tiene **Al carrito** y **Preguntar** |
-| Nosotros | `nosotros.html` | La necesidad, la propuesta de valor, el equipo, la ficha técnica y la hoja de ruta |
-| Contacto | `contacto.html` | Formulario con validación en vivo para preguntar, pedir una materia o postularse como tutor |
-| Carrito | `carrito.html` | Revisar las horas elegidas, dejar los datos y la forma de pago, y confirmar la reserva |
+| Tutores | `tutores.html` | Directorio de 9 tutores con filtros; cada tarjeta tiene **Al carrito** y **Preguntar** |
+| Nosotros | `nosotros.html` | La necesidad, la propuesta, el equipo, la ficha técnica y la hoja de ruta |
+| Contacto | `contacto.html` | Formulario con validación en vivo |
+| Carrito | `carrito.html` | Revisar las horas, entrar con la cuenta, dejar los datos y pasar a la caja |
+| Entrar | `entrar.html` | Iniciar sesión, crear cuenta o usar una cuenta de demostración |
+| Mis reservas | `mi-cuenta.html` | Recibos de todas tus reservas, su estado y las que faltan por pagar |
+| Administración | `admin.html` | Cifras, ingresos por día, tutores más reservados, compras y personas registradas |
 
-## El carrito de reservas
+## Cómo se reserva y se paga
 
-En A la Par no se compran objetos: se compran **horas de tutoría**. Cada línea del
-carrito es «N horas de *materia* con *tutor*, presencial o virtual».
+**1. Eliges tutor, materia, modalidad y horas.** Cada tarjeta del directorio tiene
+**Al carrito**, que abre una ventana con el importe calculado en vivo.
 
-### 1. Elegir tutor
+![Ventana de reserva: Estructuras de Datos, presencial, 3 h, $18.00](docs/capturas/03-reservar.jpg)
 
-En el directorio, o entre los destacados de la portada, cada tutor tiene el botón
-**Al carrito**. Si ya tienes horas con esa persona, el botón se pinta de marcador
-y dice cuántas.
+**2. El carrito se llena.** Mientras eliges, las horas viven en tu navegador y el panel
+lateral enseña el descuento del paquete de parcial (10 % desde 4 horas pagadas).
 
-![Directorio de tutores: dos tarjetas marcadas «En carrito · 2 h» y «En carrito · 3 h»](docs/capturas/02-tutores.jpg)
+![Panel lateral del carrito con tres tutores y el descuento aplicado](docs/capturas/04-carrito-lateral.jpg)
 
-### 2. Materia, modalidad y horas
+**3. Entras con tu cuenta sin perder el carrito.** Si no has entrado, el carrito te lo
+pide. Con **Probar con la cuenta demo** entras sin salir de la página. Luego dejas tu
+WhatsApp y tu disponibilidad, y **Continuar al pago** guarda la reserva en la base de
+datos a tu nombre.
 
-El botón abre una ventana con las materias que da ese tutor, las modalidades que
-ofrece y un contador de horas de 1 a 8. El importe se calcula en vivo con su
-tarifa. Si el directorio está filtrado por una materia, esa ya viene elegida.
+![Página del carrito con las sesiones, el resumen y los datos de la reserva](docs/capturas/05-carrito.jpg)
 
-![Ventana de reserva con María Fernanda Castillo: Estructuras de Datos, presencial, 3 h, $18.00](docs/capturas/03-reservar.jpg)
+**4. Pagas en la caja.** Con Yappy o con la tarjeta de prueba. Si la reserva incluye
+horas por intercambio, la caja confirma también el intercambio. Si cierras sin pagar,
+la reserva queda **pendiente** y puedes pagarla después desde **Mis reservas**.
 
-### 3. El panel lateral
+![Caja: el recibo a la izquierda y la elección de método de pago a la derecha](docs/capturas/10-caja-metodo.jpg)
 
-Al añadir, se abre el panel del carrito. Desde ahí se suben o bajan horas, se
-quitan líneas y se ve el resumen. El botón de la cabecera muestra cuántas horas
-llevas y rebota cada vez que añades algo.
+**5. Mis reservas.** Cada reserva es un recibo con su sello: *Pagado*, *Acordado* (solo
+intercambio) o una franja amarilla si falta pagarla.
 
-![Panel lateral con tres tutores, el descuento del paquete de parcial aplicado y el total de $23.40](docs/capturas/04-carrito-lateral.jpg)
+![Mis reservas: cifras de la cuenta y recibos con sello](docs/capturas/13-mi-cuenta.jpg)
 
-### 4. Revisar y confirmar
+## La caja y su animación
 
-`carrito.html` junta las sesiones, el formulario y el resumen. El formulario
-solo pide lo necesario:
+La caja es una coreografía corta que cuenta lo que pasa, no un adorno.
 
-- nombre, correo y WhatsApp (para que el tutor fije el día);
-- **forma de pago**: Yappy o efectivo. Solo aparece si hay horas pagadas;
-- **materia que das a cambio**. Solo aparece si hay horas por intercambio;
-- disponibilidad y la casilla de aceptación.
-
-![Página del carrito: las sesiones a la izquierda y el resumen con la barra de descuento a la derecha](docs/capturas/05-carrito.jpg)
-
-### 5. Reserva confirmada
-
-Al confirmar se genera un folio (`RES-AAMMDD-NNN`), se muestra el comprobante (se
-puede imprimir), el carrito se vacía y la reserva pasa al historial de ese
-navegador.
-
-![Reserva confirmada con folio, fecha, horas, total, forma de pago y las dos sesiones](docs/capturas/06-confirmacion.jpg)
-
-### En el teléfono
+| Momento | Qué se ve |
+| --- | --- |
+| Se abre | El recibo sale «de la impresora»: se revela de arriba abajo y las líneas llegan una tras otra. |
+| Tarjeta de prueba | Una tarjeta dibujada se rellena mientras escribes y **se voltea en 3D** al pedir el CVC. Al pagar, un brillo la recorre mientras el banco «autoriza». |
+| Yappy | Aparece un teléfono, llega la notificación «A la Par te pide $X» y un toque la aprueba. |
+| Pagado | El total se **subraya con marcador**, cae un **sello de goma «PAGADO»** con textura de tinta, el recibo acusa el golpe y saltan trazos de marcador como confeti. |
+| Intercambio | Las fichas **Das** y **Recibes** se cruzan en arco, cambian de lugar y el símbolo ⇄ se convierte en ✓. |
 
 <table>
   <tr>
-    <td><img src="docs/capturas/08-movil-reservar.jpg" alt="Ventana de reserva en un teléfono" width="300"></td>
-    <td><img src="docs/capturas/09-movil-carrito.jpg" alt="Panel del carrito en un teléfono" width="300"></td>
+    <td><img src="docs/capturas/11-caja-tarjeta.jpg" alt="Tarjeta de prueba dibujada con el número 4242 y el formulario"></td>
+    <td><img src="docs/capturas/14-caja-yappy.jpg" alt="Teléfono con la solicitud de pago de Yappy aprobada"></td>
   </tr>
 </table>
 
-### Las reglas del carrito
+![Pago aprobado: sello PAGADO sobre el recibo, total subrayado y las fichas del intercambio ya cruzadas](docs/capturas/12-caja-pagado.jpg)
 
-| Regla | Cómo funciona |
+Cómo está hecha:
+
+- **Web Animations API** (`js/caja.js`, clase `Coreografia`), animando solo `transform`,
+  `opacity` y `clip-path`, que el navegador mueve sin recalcular la página.
+- Curvas de salida (*ease-out*) para lo que entra. Solo la barra de progreso, que es un
+  movimiento continuo, usa una curva lineal.
+- **Se puede saltar:** un clic durante la animación la lleva al final.
+- **Respeta «reducir movimiento»:** con esa preferencia del sistema, todo va directo al
+  estado final (el pago completo tarda unos 60 ms).
+- Mientras se procesa el pago la caja no se puede cerrar. Una región `aria-live`
+  anuncia «Procesando el pago…» y «Pago aprobado» a los lectores de pantalla.
+
+<table>
+  <tr>
+    <td><img src="docs/capturas/19-movil-caja.jpg" alt="La caja en un teléfono: el recibo arriba y Yappy abajo" width="300"></td>
+    <td><img src="docs/capturas/20-movil-pagado.jpg" alt="Pago aprobado en el teléfono con el sello sobre el recibo" width="300"></td>
+  </tr>
+</table>
+
+**Nada se cobra de verdad.** La caja solo acepta la tarjeta de prueba
+`4242 4242 4242 4242`: cualquier otro número se rechaza en el navegador y en el
+servidor, y del navegador solo sale el final `4242`. Los campos de tarjeta desactivan
+el autocompletado, para que el navegador no ofrezca tarjetas guardadas.
+
+## Panel de administración
+
+Solo lo ve una cuenta con rol `admin` (el servidor lo comprueba en cada petición).
+
+- **Cifras:** estudiantes (y cuántos en los últimos 7 días), reservas pagadas y
+  pendientes, ingresos simulados con ticket promedio, horas vendidas.
+- **Ingresos por día:** columnas de los últimos 14 días. Cada columna se puede enfocar
+  con el teclado y muestra su importe y el número de reservas. Los mismos datos están en
+  una tabla desplegable.
+- **Tutores más reservados:** horas pagadas e importe antes de descuentos.
+- **Compras:** búsqueda por folio, estudiante o tutor y filtros *Todas / Pagadas /
+  Pendientes / Con intercambio*. Al elegir una compra se abre su recibo con los datos de
+  contacto, la disponibilidad y la referencia del pago.
+- **Personas registradas:** búsqueda por nombre, correo o carrera, con la insignia
+  *Nueva* para las cuentas de las últimas 24 horas.
+- Se actualiza solo al volver a la pestaña; al recargar, lo anterior se queda visible y
+  atenuado, sin saltos.
+
+![Panel de administración: cifras, ingresos por día y tutores más reservados](docs/capturas/16-admin.jpg)
+
+![Detalle de una compra: el recibo con sello y los datos de la reserva](docs/capturas/17-admin-detalle.jpg)
+
+## Arquitectura
+
+```
+Navegador (HTML5 + CSS3 + Bootstrap 5.3 + JavaScript con clases)
+   │   fetch /api/…   cookie de sesión HttpOnly
+   ▼
+Funciones de Vercel (Node.js, carpeta api/)
+   │   consultas SQL parametrizadas
+   ▼
+PostgreSQL · Neon en producción · PGlite (Postgres en WebAssembly) en local
+```
+
+- **Sin framework en el navegador.** Las páginas se generan una vez con `build.mjs` a
+  partir de parciales (cabecera, pie, scripts) y se sirven como archivos estáticos.
+- **Funciones sin estado** en `api/`, una por recurso. La conexión a la base es el
+  controlador HTTP de Neon (`@neondatabase/serverless`), pensado para funciones que
+  arrancan y se apagan.
+- **La base se prepara sola.** La primera petición de cada instancia comprueba la
+  versión del esquema: si la base está vacía, crea las tablas y siembra los datos de
+  demostración (con sentencias idempotentes). El catálogo de materias y tutores se
+  sincroniza en cada arranque con `js/datos.js`, que sigue siendo la única fuente de
+  verdad: `build.mjs` genera a partir de él `api/_lib/catalogo.js`.
+- **En local no hace falta instalar Postgres:** el servidor de desarrollo usa PGlite,
+  un Postgres real compilado a WebAssembly, y el código de producción no cambia.
+
+## Base de datos
+
+| Tabla | Qué guarda |
 | --- | --- |
-| Precio | Tarifa del tutor × horas. La tarifa se lee siempre del catálogo, nunca de lo guardado en el navegador, así que no se puede manipular desde `localStorage`. |
-| Líneas iguales | Mismo tutor + misma materia + misma modalidad = una sola línea: las horas se suman. |
-| Límites | De 1 a 8 horas por línea. |
-| Paquete de parcial | Desde 4 horas pagadas en una misma reserva, 10 % de descuento. Una barra de marcador enseña cuánto falta. |
-| Intercambio | Los tutores con precio 0 no cobran: das una hora de una materia que dominas por cada hora que recibes. |
-| Pago | El sitio no cobra en línea ni pide datos de tarjeta: se paga al tutor al terminar cada sesión. |
-| Persistencia | El carrito se guarda en `localStorage` (`alapar:carrito`) y se sincroniza entre pestañas abiertas. Las reservas se guardan en `alapar:reservas`. |
-| Vaciar | Pide un segundo toque, sin ventanas del navegador. |
+| `usuarios` | nombre, correo (único sin distinguir mayúsculas), contraseña con scrypt, rol (`estudiante` / `admin`), carrera, alta y último acceso |
+| `sesiones` | huella SHA-256 del token de la cookie, usuario y vencimiento (7 días) |
+| `materias` | código, nombre y área (sincronizado con `js/datos.js`) |
+| `tutores` | tarifa por hora (0 = intercambio), modalidades y materias que da |
+| `reservas` | folio (`RES-AAMMDD-NNNN`, de una secuencia), usuario, estado (`pendiente` / `pagada`), WhatsApp, disponibilidad, materia a cambio, horas, subtotal, descuento, total, método y referencia del pago |
+| `reserva_lineas` | cada sesión de la reserva: tutor, materia, modalidad, horas y tarifa congelada |
+| `esquema` | versión de las migraciones aplicadas |
 
-Todavía no hay base de datos: el Proyecto 1 del curso es un sitio sin servidor.
-En el Proyecto 2 la reserva se enviará a una base de datos MySQL en lugar de
-quedarse en el navegador.
+Una reserva y sus sesiones se guardan en **una sola sentencia** (CTE con
+`jsonb_to_recordset`): o se guarda todo o nada.
 
-## Cómo está hecho
+Los datos de demostración son 2 cuentas para entrar, 9 estudiantes ficticios y 14
+reservas repartidas en las últimas dos semanas (pagadas con Yappy, con tarjeta, por
+intercambio y alguna pendiente), para que el panel no arranque vacío.
 
-### Tecnologías
+## API
 
-- **HTML5 semántico**: `header`, `nav`, `main`, `section`, `article`, `aside`,
-  `footer`, `figure`, `address`, `time`, `mark`, `output`, `fieldset`/`legend`.
-- **CSS3** propio sobre **Bootstrap 5.3** (copia local en `vendor/`): variables,
-  `grid`, `clamp()`, `aspect-ratio`, `position: sticky`, animaciones,
-  `prefers-reduced-motion` y transiciones entre páginas.
-- **JavaScript ES2022 orientado a objetos**, sin frameworks: clases, herencia,
-  campos y métodos privados (`#`), getters y métodos estáticos.
-- **Responsive**: probado en 375, 390, 768, 1024, 1280 y 1440 px de ancho.
-- **Hosting**: Vercel, plan gratuito.
+| Método | Ruta | Sesión | Qué hace |
+| --- | --- | --- | --- |
+| `GET` | `/api/auth/yo` | — | Quién ha entrado (`null` si nadie) |
+| `POST` | `/api/auth/entrar` | — | `{ correo, clave }` → abre sesión |
+| `POST` | `/api/auth/registro` | — | `{ nombre, correo, clave, carrera? }` → crea una cuenta de estudiante y abre sesión |
+| `POST` | `/api/auth/salir` | sí | Cierra la sesión |
+| `GET` | `/api/reservas` | sí | Las reservas de la cuenta, con sus sesiones |
+| `POST` | `/api/reservas` | sí | `{ lineas, telefono, disponibilidad, ofrece? }` → reserva pendiente; los importes los calcula el servidor |
+| `POST` | `/api/reservas/pagar` | sí | `{ folio, metodo, telefono \| ultimos4 }` → pago simulado o confirmación del intercambio |
+| `GET` | `/api/admin/resumen` | admin | Cifras, serie de 14 días, personas, compras y tutores |
 
-### Capas de JavaScript
+Los errores vuelven siempre como JSON `{ error, mensaje, detalles? }`, y `detalles`
+señala campo por campo qué falló, para marcarlo en el formulario.
 
-Los archivos se cargan en este orden y cada uno solo usa los anteriores:
+## Seguridad
 
-```
-datos.js  →  modelos.js  →  ui.js  →  validacion.js  →  carrito.js  →  paginas.js
- (datos)     (dominio)     (interfaz)   (formularios)     (carrito)     (arranque)
-```
+- **Contraseñas con scrypt**, con sal aleatoria y comparación en tiempo constante. Si
+  el correo no existe se verifica igual contra un hash señuelo, para que la respuesta no
+  delate qué cuentas están registradas.
+- **Sesiones** con un token aleatorio de 256 bits en una cookie `HttpOnly`,
+  `SameSite=Lax` y `Secure`. En la base solo se guarda su huella SHA-256.
+- **CSRF:** toda petición que cambia datos debe ser JSON y venir del mismo origen.
+- **El servidor no se fía del navegador:** recalcula tarifas, descuento y total con la
+  base de datos, comprueba que cada tutor dé esa materia y modalidad, ignora el `rol`
+  que llegue en el registro y solo deja pagar las reservas propias.
+- **SQL siempre parametrizado.** Nunca se pega texto del usuario dentro de una consulta.
+- **Todo lo que escriben las personas se escapa** antes de pintarlo (los nombres del
+  panel, por ejemplo).
+- **Redirecciones solo a páginas propias:** después de entrar, `?siguiente=` acepta una
+  lista cerrada.
+- **Sin datos de tarjeta:** solo la tarjeta de prueba, y del navegador solo sale `4242`.
+- Pendiente para una versión real: limitar los intentos de inicio de sesión y verificar
+  el correo al registrarse.
 
-| Archivo | Clases | Para qué |
-| --- | --- | --- |
-| `js/datos.js` | — | Materias, tutores, testimonios y preguntas. En el Proyecto 2 vendrán de la base de datos. |
-| `js/modelos.js` | `Materia`, `Tutor`, `Testimonio`, `Pregunta`, `Catalogo` → `CatalogoMaterias`, `CatalogoTutores`; `Repositorio` | El modelo del negocio. `Catalogo` es una colección genérica e inmutable (filtrar, ordenar, buscar, agrupar) de la que heredan los catálogos concretos. |
-| `js/ui.js` | `Navegacion`, `Revelador`, `ContadorAnimado`, `HeroScrollVideo`, `Marquesina`, `Aviso`, `Plantillas` | Lo que se ve: animaciones al hacer scroll, el vídeo de la portada, avisos y el HTML de tarjetas y listas. |
-| `js/validacion.js` | `ReglaValidacion`, `Validador`, `CampoFormulario`, `Solicitud`, `AlmacenSolicitudes`, `FormularioContacto` | Validación campo a campo, reutilizable por cualquier formulario del sitio. |
-| `js/carrito.js` | `Dinero`, `AlmacenLocal`, `ArticuloCarrito`, `Carrito`, `Reserva` (hereda de `Solicitud`), `PlantillasCarrito`, `ModalReserva`, `VistaCarrito`, `FormularioReserva`, `Tienda` | Todo el carrito: reglas de precio, persistencia, ventana de reserva, panel lateral y confirmación. |
-| `js/paginas.js` | `Pagina` → `PaginaInicio`, `PaginaMaterias`, `PaginaTutores`, `PaginaComoFunciona`, `PaginaNosotros`, `PaginaContacto`, `PaginaCarrito`; `App` | Un controlador por página. `App` arranca el que corresponde según `<body data-pagina>`. |
+## El frontend por dentro
 
-### Ideas de diseño del código
-
-- **Encapsulamiento.** El estado vive en campos privados (`#lineas`, `#horas`…).
-  Nadie fuera de `Carrito` puede tocar sus líneas sin pasar por `agregar()`,
-  `cambiarHoras()`, `quitar()` o `vaciar()`, que validan, guardan y avisan.
-- **Observador.** `Carrito.suscribir(fn)` avisa de cada cambio. El botón de la
-  cabecera, el panel lateral, la página del carrito y el formulario se repintan
-  solos: ninguno llama a otro.
-- **Herencia.** `Reserva extends Solicitud` reutiliza el folio y la fecha del
-  formulario de contacto; solo cambia el prefijo (`RES` en vez de `AP`) y congela
-  las sesiones y los importes en el momento de confirmar.
-- **Una sola fuente de verdad.** Precios y nombres salen del `Repositorio`. Una
-  línea guardada que ya no existe en el catálogo se descarta al cargar.
-- **Accesibilidad.** Los cambios del carrito se anuncian en una región viva para
-  lectores de pantalla, el foco vuelve al mismo botón tras repintar, todo se
-  puede usar con teclado y el movimiento se apaga con «reducir movimiento».
-
-### Identidad visual
-
-Cuaderno y marcador: papel `#fbf7ef`, tinta `#10192b` y marcador amarillo
-`#ffd400`, con Young Serif para los títulos, Instrument Sans para el texto y
-DM Mono para las etiquetas. Los `<mark>` se pintan al entrar en pantalla y el
-carrito usa el mismo lenguaje: el contador es un punto de marcador, el descuento
-es un trazo que se llena y el resumen se corta como un recibo.
-
-### Páginas generadas desde parciales
-
-La cabecera, el pie y los scripts están escritos una sola vez en `src/partials/`.
-Cada página de `src/pages/` contiene solo su `<main>`, y `node build.mjs` las
-une y escribe los `.html` finales en la raíz, marcando el enlace activo del menú.
-En el Proyecto 2 esos parciales se convierten directamente en `include` de PHP.
-
-## Estructura del proyecto
+Los scripts se cargan en este orden y cada uno solo usa los anteriores:
 
 ```
-alapar/
-├── index.html, como-funciona.html, materias.html, tutores.html,
-│   nosotros.html, contacto.html, carrito.html   ← el sitio (generado)
-├── css/estilos.css        tokens, componentes, animaciones y carrito
-├── js/                    datos, modelos, interfaz, validación, carrito y páginas
-├── vendor/bootstrap/      Bootstrap 5.3.8 (CSS y JS)
-├── assets/img/            fotografías (WebP), logo, favicon, imagen para compartir
-├── assets/video/          vídeo de la portada (escritorio y móvil)
-├── src/                   fuente de las páginas: partials/ y pages/
-├── build.mjs              genera los .html de la raíz a partir de src/
-├── pruebas/               prueba de extremo a extremo con Playwright
-├── docs/capturas/         las capturas de este README
-└── vercel.json            URLs limpias y caché en el hosting
+datos → modelos → ui → validacion → sesion → carrito → caja → admin → paginas
 ```
 
-El ZIP que se entregó por Teams lleva solo el sitio (y las capturas); `src/`,
-`build.mjs` y `pruebas/` están en este repositorio.
+| Archivo | Clases |
+| --- | --- |
+| `js/datos.js` | Materias, tutores, testimonios y preguntas |
+| `js/modelos.js` | `Materia`, `Tutor`, `Catalogo` → `CatalogoMaterias`, `CatalogoTutores`, `Repositorio` |
+| `js/ui.js` | `Navegacion`, `Revelador`, `ContadorAnimado`, `HeroScrollVideo`, `Aviso`, `Plantillas` |
+| `js/validacion.js` | `ReglaValidacion`, `Validador`, `CampoFormulario`, `Solicitud`, `FormularioContacto` |
+| `js/sesion.js` | `ErrorApi`, `ClienteApi` (fetch a la API), `Sesion` (quién ha entrado, observable), `VistaSesion` (menú de la cuenta) |
+| `js/carrito.js` | `ArticuloCarrito`, `Carrito` (observable, en `localStorage`), `Reserva`, `ModalReserva`, `VistaCarrito`, `FormularioReserva` |
+| `js/caja.js` | `Recibo`, `Coreografia`, `TarjetaPrueba`, `Caja` |
+| `js/admin.js` | `GraficoDias`, `RankingTutores`, `TablaPersonas`, `TablaCompras`, `DetalleCompra`, `PanelAdmin` |
+| `js/paginas.js` | `Pagina` → una clase por página, incluidas `PaginaEntrar`, `PaginaCuenta` y `PaginaAdmin`; `App` arranca la que toca |
 
-## Cómo verlo y modificarlo
+Ideas que se repiten:
 
-- **En línea:** https://alapar-utp.vercel.app
-- **En local, sin instalar nada:** abre `index.html` con doble clic.
-- **Con un servidor local:**
+- **Encapsulamiento:** el estado va en campos privados (`#lineas`, `#usuario`…).
+- **Patrón observador:** `Carrito` y `Sesion` avisan de cada cambio. La cabecera, el
+  panel lateral y los formularios se repintan solos.
+- **Herencia:** las páginas heredan de `Pagina`, y los catálogos de `Catalogo`.
+- **Validación en dos lados:** en el navegador para responder rápido, en el servidor
+  porque es el que manda.
 
-  ```bash
-  npx http-server . -p 5183 -c-1
-  ```
+## Cómo ejecutarlo y publicarlo
 
-- **Para cambiar una página:** edita `src/pages/<página>.html` (o un parcial de
-  `src/partials/`) y regenera:
+**En local** (Node.js 20 o superior):
 
-  ```bash
-  node build.mjs
-  ```
+```bash
+npm install
+npm run dev          # http://localhost:5183 con una base PGlite en desarrollo/.pglite
+```
 
-  Los `.html` de la raíz no se editan a mano: `build.mjs` los sobrescribe.
+Para trabajar contra una base Neon, crea `.env.local` con
+`DATABASE_URL=postgresql://…`. Ese archivo no se sube nunca: está en `.gitignore`.
+
+**Para cambiar una página:** edita `src/pages/<página>.html` o un parcial de
+`src/partials/` y ejecuta `npm run paginas`.
+
+**En Vercel:** conecta una base **Neon** al proyecto (pestaña *Storage* → *Neon*, que
+crea la variable `DATABASE_URL`) y despliega. No hace falta ejecutar migraciones: la
+primera petición crea las tablas y los datos de demostración.
 
 ## Cómo se probó
 
-`pruebas/carrito.e2e.mjs` recorre el sitio en Chromium como lo haría una persona
-y hace 46 comprobaciones:
+Dos baterías automáticas, cada una con su propia base en memoria:
 
-- añadir horas con tres tutores, incluida una de intercambio, y que el importe,
-  el descuento y el total cuadren en cada paso;
-- subir, bajar y quitar horas desde el panel, sin perder el foco del teclado;
-- recargar la página y que el carrito siga ahí;
-- enviar el formulario vacío y que marque cada campo obligatorio, y rechazar un
-  teléfono que no es de Panamá;
-- confirmar, obtener un folio `RES-…`, ver el historial y comprobar lo guardado
-  en `localStorage`;
-- vaciar con doble toque, el equipo de cinco personas en *Nosotros* y en el pie,
-  el formulario de contacto de siempre y la vista de teléfono sin desplazamiento
-  horizontal;
-- ningún error de JavaScript en la consola.
+- **`npm run prueba:api`** (41 comprobaciones): sesiones y cookies, contraseñas
+  equivocadas, peticiones de otro origen y que no son JSON, precios manipulados desde el
+  navegador, materias o modalidades que un tutor no da, más de 8 horas, teléfonos
+  inválidos, pagar la reserva de otra persona, pagar dos veces, tarjetas que no son la
+  de prueba, intercambios, registro duplicado, rol inyectado y el panel de
+  administración.
+- **`npm run prueba:sitio`** (49 comprobaciones, Playwright): el recorrido completo en
+  Chromium. Carrito, entrar sin perderlo, caja con tarjeta y con Yappy, reserva
+  pendiente pagada después, crear una cuenta, panel de administración (filtros,
+  búsqueda, detalle, gráfico), un estudiante bloqueado en el panel y la caja en un
+  teléfono. Además comprueba que no haya errores de JavaScript y que las páginas no se
+  desborden en el móvil.
 
 ```bash
-npm install                 # instala Playwright (solo para las pruebas)
-npm run servir              # en una terminal
-npm run prueba              # en otra
+npm run prueba       # las dos
+npm run capturas     # regenera las capturas de este README
 ```
 
 ## Equipo
@@ -272,11 +331,12 @@ Los cinco cursan Ingeniería de Software en la Universidad Tecnológica de Panam
 ## Créditos
 
 - Fotografías y vídeo generados con IA (Flux 2, Soul 2 y Kling 3) a partir de
-  indicaciones escritas por el equipo. Los tutores, testimonios y cifras son
-  ficticios.
-- Tipografías: Young Serif, Instrument Sans y DM Mono (Google Fonts, licencia
-  SIL Open Font).
-- Bootstrap 5.3 (licencia MIT).
+  indicaciones escritas por el equipo. Los tutores, testimonios, estudiantes y
+  compras de demostración son ficticios.
+- Tipografías: Young Serif, Instrument Sans y DM Mono (Google Fonts, licencia SIL Open
+  Font).
+- Bootstrap 5.3 (MIT), `@neondatabase/serverless` (MIT), PGlite (Apache 2.0 / PostgreSQL)
+  y Playwright (Apache 2.0).
 
 A la Par es una iniciativa estudiantil y un proyecto de curso: no es un servicio
-oficial de la UTP.
+oficial de la UTP, y la caja no procesa pagos reales.

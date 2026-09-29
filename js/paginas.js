@@ -20,6 +20,7 @@ class Pagina {
   constructor() {
     this.navegacion = new Navegacion();
     this.revelador = new Revelador();
+    this.cuenta = Cuenta.iniciar();
     this.tienda = Tienda.iniciar();
     ContadorAnimado.observarTodos();
   }
@@ -312,76 +313,356 @@ class PaginaContacto extends Pagina {
 
 /* ------------------------------------------------------------------ */
 class PaginaCarrito extends Pagina {
-  #lleno; #vacio; #exito; #historial; #listaHistorial; #confirmada = false;
+  #lleno; #vacio; #aviso; #acceso; #sinServidor; #datos;
 
   constructor() {
     super();
     this.#lleno = $("#carritoLleno");
     this.#vacio = $("#carritoVacio");
-    this.#exito = $("#exitoReserva");
-    this.#historial = $("#historial");
-    this.#listaHistorial = $("#listaHistorial");
+    this.#aviso = $("#avisoReserva");
+    this.#acceso = $("#accesoRequerido");
+    this.#sinServidor = $("#sinServidor");
+    this.#datos = $("#datosReserva");
 
     this.render($("#tutoresSugeridos"), Repositorio.tutores.destacados(3).mapear(Plantillas.tutor).join(""));
 
     const formulario = $("#formularioReserva");
     if (formulario) {
       this.formulario = new FormularioReserva(formulario, this.tienda.carrito, {
-        alConfirmar: (reserva) => this.#mostrarConfirmacion(reserva)
+        alReservar: (reserva) => this.#cobrar(reserva)
       });
     }
+    $("#entrarDemo")?.addEventListener("click", (e) => this.#entrarDemo(e.currentTarget));
 
-    $("#imprimirReserva")?.addEventListener("click", () => window.print());
-
-    this.tienda.carrito.suscribir((evento) => {
-      // Si después de confirmar se añade algo, se vuelve al carrito.
-      if (evento === "agregado") this.#confirmada = false;
-      this.#actualizar();
-    });
+    this.tienda.carrito.suscribir(() => this.#actualizar());
+    this.cuenta.sesion.suscribir(() => this.#actualizar());
     this.#actualizar();
-    this.#pintarHistorial();
   }
 
-  /** Tres estados: carrito con sesiones, carrito vacío o reserva recién confirmada. */
+  /** Carrito lleno o vacío; y dentro, sin sesión, con sesión o sin servidor. */
   #actualizar() {
     const vacio = this.tienda.carrito.vacio;
-    if (this.#lleno) this.#lleno.hidden = vacio || this.#confirmada;
-    if (this.#vacio) this.#vacio.hidden = !vacio || this.#confirmada;
-    if (this.#exito) this.#exito.classList.toggle("is-visible", this.#confirmada);
+    if (this.#lleno) this.#lleno.hidden = vacio;
+    if (this.#vacio) this.#vacio.hidden = !vacio;
+    const s = this.cuenta.sesion;
+    if (this.#sinServidor) this.#sinServidor.hidden = !s.sinServidor;
+    if (this.#acceso) this.#acceso.hidden = s.activa || s.sinServidor;
+    if (this.#datos) this.#datos.hidden = !s.activa;
   }
 
-  #mostrarConfirmacion(reserva) {
-    this.#confirmada = true;
-    const poner = (clave, texto) => {
-      const el = this.#exito?.querySelector(`[data-resumen="${clave}"]`);
-      if (el) el.textContent = texto;
+  /** Entra con la cuenta demo sin salir de la página: el carrito no se pierde. */
+  async #entrarDemo(boton) {
+    const texto = boton.textContent;
+    boton.disabled = true;
+    boton.textContent = "Entrando…";
+    try {
+      const usuario = await this.cuenta.sesion.entrar("estudiante@alapar.demo", "Estudiante2026");
+      Aviso.mostrar(`Entraste como ${usuario.nombre}. Tu carrito sigue aquí.`);
+      window.setTimeout(() => $("#telefono")?.focus({ preventScroll: false }), 60);
+    } catch (error) {
+      Aviso.mostrar(error.message, 5000);
+    } finally {
+      boton.disabled = false;
+      boton.textContent = texto;
+    }
+  }
+
+  #cobrar(reserva) {
+    CajaSimulada.abrir(reserva, { alTerminar: (pagada, r) => this.#mostrarAviso(pagada, r) });
+  }
+
+  #mostrarAviso(pagada, reserva) {
+    if (!this.#aviso || !reserva) return;
+    $("[data-aviso-titulo]", this.#aviso).textContent = pagada
+      ? `Reserva ${reserva.folio} confirmada`
+      : `Reserva ${reserva.folio} pendiente de pago`;
+    $("[data-aviso-texto]", this.#aviso).textContent = pagada
+      ? "Tus tutores te escribirán en menos de 24 horas para fijar el día."
+      : "La guardamos en tu cuenta: puedes pagarla cuando quieras desde «Mis reservas».";
+    this.#aviso.classList.toggle("is-pendiente", !pagada);
+    this.#aviso.hidden = false;
+    this.#aviso.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+}
+
+/* ------------------------------------------------------------------ */
+class PaginaEntrar extends Pagina {
+  #siguiente; #pestanas = []; #formularios = {}; #campos = { entrar: new Map(), registro: new Map() };
+
+  constructor() {
+    super();
+    this.#siguiente = PaginaEntrar.destinoSeguro(this.leerParametro("siguiente"));
+    this.#formularios = { entrar: $("#formEntrar"), registro: $("#formRegistro") };
+    this.#prepararPestanas();
+    this.#definirCampos();
+    this.#formularios.entrar?.addEventListener("submit", (e) => this.#entrar(e));
+    this.#formularios.registro?.addEventListener("submit", (e) => this.#registrar(e));
+    for (const boton of $$("[data-demo]")) boton.addEventListener("click", () => this.#entrarDemo(boton));
+    for (const boton of $$("[data-ver-clave]")) boton.addEventListener("click", () => PaginaEntrar.alternarClave(boton));
+    this.cuenta.sesion.suscribir(() => this.#pintarEstado());
+    this.#pintarEstado();
+    if (this.leerParametro("modo") === "registro") this.#mostrar("registro");
+  }
+
+  /** Solo se vuelve a páginas del propio sitio: nada de redirecciones abiertas. */
+  static destinoSeguro(valor) {
+    return ["carrito.html", "mi-cuenta.html", "admin.html", "tutores.html", "index.html"].includes(valor) ? valor : null;
+  }
+
+  static alternarClave(boton) {
+    const campo = document.getElementById(boton.dataset.verClave);
+    if (!campo) return;
+    const ver = campo.type === "password";
+    campo.type = ver ? "text" : "password";
+    boton.setAttribute("aria-pressed", String(ver));
+    boton.setAttribute("aria-label", ver ? "Ocultar contraseña" : "Mostrar contraseña");
+    boton.classList.toggle("is-visible", ver);
+  }
+
+  #pintarEstado() {
+    const s = this.cuenta.sesion;
+    const aviso = $("#avisoServidor");
+    if (aviso) aviso.hidden = !s.sinServidor;
+    const dentro = $("#yaDentro");
+    if (dentro) dentro.hidden = !s.activa;
+    const acceso = $("#panelFormularios");
+    if (acceso) acceso.hidden = s.activa;
+    const irPanel = $("#irPanel");
+    if (irPanel) irPanel.hidden = !s.esAdmin;
+  }
+
+  #prepararPestanas() {
+    this.#pestanas = $$("[data-pestana]");
+    for (const pestana of this.#pestanas) {
+      pestana.addEventListener("click", () => this.#mostrar(pestana.dataset.pestana));
+      pestana.addEventListener("keydown", (e) => {
+        if (!["ArrowLeft", "ArrowRight"].includes(e.key)) return;
+        e.preventDefault();
+        const i = (this.#pestanas.indexOf(pestana) + 1) % this.#pestanas.length;
+        this.#mostrar(this.#pestanas[i].dataset.pestana, true);
+      });
+    }
+    for (const enlace of $$("[data-ir-pestana]")) {
+      enlace.addEventListener("click", (e) => { e.preventDefault(); this.#mostrar(enlace.dataset.irPestana, true); });
+    }
+  }
+
+  #mostrar(nombre, enfocar = false) {
+    this.#pestanas.forEach((pestana, i) => {
+      const activa = pestana.dataset.pestana === nombre;
+      pestana.classList.toggle("is-activa", activa);
+      pestana.setAttribute("aria-selected", String(activa));
+      pestana.tabIndex = activa ? 0 : -1;
+      if (activa) {
+        pestana.closest(".pestanas").dataset.activa = String(i);
+        if (enfocar) pestana.focus();
+      }
+    });
+    for (const [clave, form] of Object.entries(this.#formularios)) if (form) form.hidden = clave !== nombre;
+  }
+
+  #definirCampos() {
+    const definiciones = {
+      entrar: [
+        ["correo", [Validador.requerido("Escribe tu correo."), Validador.correo()]],
+        ["clave", [Validador.requerido("Escribe tu contraseña.")]]
+      ],
+      registro: [
+        ["nombre", [Validador.requerido("Escribe tu nombre."), Validador.longitudMinima(3, "Mínimo 3 letras."), Validador.soloLetras()]],
+        ["correo", [Validador.requerido("Escribe tu correo."), Validador.correo()]],
+        ["clave", [Validador.requerido("Crea una contraseña."), Validador.longitudMinima(8, "La contraseña necesita al menos 8 caracteres."), Validador.longitudMaxima(72, "Máximo 72 caracteres.")]],
+        ["acepto", [Validador.marcado("Confirma que leíste el aviso.")]]
+      ]
     };
-    const ofrece = reserva.ofrece ? Repositorio.materias.porCodigo(reserva.ofrece)?.nombre ?? reserva.ofrece : "";
-    const pago = [reserva.pago !== "intercambio" ? Reserva.textoPago(reserva.pago) : "", ofrece ? `Intercambio: das ${ofrece}` : ""]
-      .filter(Boolean).join(" · ") || Reserva.textoPago("intercambio");
-
-    poner("folio", reserva.folio);
-    poner("nombre", reserva.nombre);
-    poner("correo", reserva.correo);
-    poner("telefono", reserva.telefono);
-    poner("fecha", reserva.fechaTexto);
-    poner("pago", pago);
-    poner("total", Dinero.formato(reserva.total));
-    poner("horas", `${reserva.horas} h`);
-    const sesiones = this.#exito?.querySelector('[data-resumen="sesiones"]');
-    if (sesiones) sesiones.innerHTML = reserva.sesiones.map(PlantillasCarrito.sesionConfirmada).join("");
-
-    this.#actualizar();
-    this.#pintarHistorial();
-    this.#exito?.scrollIntoView({ block: "start", behavior: "smooth" });
-    this.#exito?.querySelector("h2")?.focus({ preventScroll: true });
+    for (const [formulario, lista] of Object.entries(definiciones)) {
+      const form = this.#formularios[formulario];
+      if (!form) continue;
+      for (const [nombre, reglas] of lista) {
+        const campo = new CampoFormulario(nombre, form, reglas);
+        campo.escuchar();
+        this.#campos[formulario].set(nombre, campo);
+      }
+    }
   }
 
-  #pintarHistorial() {
-    if (!this.#historial || !this.#listaHistorial || !this.formulario) return;
-    const reservas = this.formulario.listarReservas().slice(-5).reverse();
-    this.#historial.hidden = reservas.length === 0;
-    this.#listaHistorial.innerHTML = reservas.map(PlantillasCarrito.reservaPrevia).join("");
+  #validar(formulario) {
+    let primero = null;
+    for (const campo of this.#campos[formulario].values()) if (!campo.validar() && !primero) primero = campo;
+    if (primero) primero.primerControl.focus();
+    return !primero;
+  }
+
+  #alerta(formulario, texto) {
+    const alerta = $(".alerta-form", this.#formularios[formulario]);
+    if (!alerta) return;
+    alerta.textContent = texto ?? "";
+    alerta.hidden = !texto;
+    if (texto && !prefiereMenosMovimiento()) {
+      const panel = $("#panelFormularios");
+      panel?.animate([{ transform: "translateX(0)" }, { transform: "translateX(-6px)" }, { transform: "translateX(5px)" }, { transform: "translateX(-3px)" }, { transform: "translateX(0)" }], { duration: 320, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
+    }
+  }
+
+  async #conBoton(form, texto, fn) {
+    const boton = $('button[type="submit"]', form);
+    const original = boton.innerHTML;
+    boton.disabled = true;
+    boton.textContent = texto;
+    try { return await fn(); }
+    finally { boton.disabled = false; boton.innerHTML = original; }
+  }
+
+  #bienvenida(usuario, nuevo = false) {
+    Aviso.mostrar(nuevo ? `¡Bienvenida o bienvenido, ${usuario.nombre.split(" ")[0]}! Tu cuenta está lista.` : `Hola de nuevo, ${usuario.nombre.split(" ")[0]}.`);
+    const destino = this.#siguiente ?? (usuario.rol === "admin" ? "admin.html" : "mi-cuenta.html");
+    window.setTimeout(() => window.location.assign(destino), 450);
+  }
+
+  async #entrar(evento) {
+    evento.preventDefault();
+    this.#alerta("entrar", "");
+    if (!this.#validar("entrar")) return;
+    const c = this.#campos.entrar;
+    await this.#conBoton(this.#formularios.entrar, "Entrando…", async () => {
+      try {
+        const usuario = await this.cuenta.sesion.entrar(c.get("correo").valor, c.get("clave").valor);
+        this.#bienvenida(usuario);
+      } catch (error) {
+        this.#alerta("entrar", error.message);
+        if (error.codigo === "credenciales_invalidas") c.get("clave").primerControl.select();
+      }
+    });
+  }
+
+  async #registrar(evento) {
+    evento.preventDefault();
+    this.#alerta("registro", "");
+    if (!this.#validar("registro")) return;
+    const c = this.#campos.registro;
+    await this.#conBoton(this.#formularios.registro, "Creando tu cuenta…", async () => {
+      try {
+        const usuario = await this.cuenta.sesion.registrar({
+          nombre: c.get("nombre").valor,
+          correo: c.get("correo").valor,
+          clave: c.get("clave").valor,
+          carrera: $("#registroCarrera")?.value.trim() || null
+        });
+        this.#bienvenida(usuario, true);
+      } catch (error) {
+        for (const [nombre, mensaje] of Object.entries(error.detalles ?? {})) c.get(nombre)?.marcarError(mensaje);
+        this.#alerta("registro", error.message);
+      }
+    });
+  }
+
+  /** Las notas de demostración rellenan el formulario y entran. */
+  async #entrarDemo(boton) {
+    const cuentas = {
+      estudiante: ["estudiante@alapar.demo", "Estudiante2026"],
+      admin: ["admin@alapar.demo", "Admin2026"]
+    };
+    const [correo, clave] = cuentas[boton.dataset.demo] ?? [];
+    if (!correo) return;
+    this.#mostrar("entrar");
+    this.#campos.entrar.get("correo").valor = correo;
+    this.#campos.entrar.get("clave").valor = clave;
+    this.#campos.entrar.forEach((campo) => campo.validar());
+    boton.closest(".nota")?.classList.add("is-elegida");
+    this.#formularios.entrar.requestSubmit();
+  }
+}
+
+/* ------------------------------------------------------------------ */
+class PaginaCuenta extends Pagina {
+  #reservas = [];
+
+  constructor() {
+    super();
+    $("#listaReservas")?.addEventListener("click", (e) => {
+      const boton = e.target.closest("[data-pagar]");
+      if (boton) this.#pagar(boton.dataset.pagar);
+    });
+    this.cuenta.sesion.cargar().then(() => this.#iniciar());
+  }
+
+  async #iniciar() {
+    const s = this.cuenta.sesion;
+    if (s.sinServidor) { $("#cuentaSinServidor").hidden = false; $("#cuentaContenido").hidden = true; return; }
+    if (!s.activa) { window.location.replace("entrar.html?siguiente=mi-cuenta.html"); return; }
+    const nombre = $("#cuentaNombre");
+    if (nombre) nombre.textContent = s.usuario.nombre.split(" ")[0];
+    const detalle = $("#cuentaDetalle");
+    if (detalle) detalle.textContent = [s.usuario.carrera, s.usuario.correo].filter(Boolean).join(" · ");
+    $("#irPanelAdmin").hidden = !s.esAdmin;
+    await this.#cargar();
+  }
+
+  async #cargar() {
+    const lista = $("#listaReservas");
+    try {
+      const { reservas } = await ClienteApi.misReservas();
+      this.#reservas = reservas.map((r) => new Reserva(r));
+    } catch (error) {
+      if (error.estado === 401) { window.location.replace("entrar.html?siguiente=mi-cuenta.html"); return; }
+      this.render(lista, Plantillas.vacio("No pudimos cargar tus reservas", error.message));
+      return;
+    }
+    const pagadas = this.#reservas.filter((r) => r.pagada);
+    const cifras = [
+      { valor: this.#reservas.length, texto: this.#reservas.length === 1 ? "reserva hecha" : "reservas hechas" },
+      { valor: pagadas.reduce((s, r) => s + r.datos.horas, 0), texto: "horas de tutoría confirmadas" },
+      { valor: pagadas.reduce((s, r) => s + r.datos.total, 0), decimales: 2, prefijo: "$", texto: "pagados en la caja (simulado)" }
+    ];
+    this.render($("#cuentaCifras"), cifras.map(Plantillas.estadistica).join(""));
+    const pendientes = this.#reservas.length - pagadas.length;
+    const aviso = $("#cuentaPendientes");
+    if (aviso) {
+      aviso.hidden = pendientes === 0;
+      aviso.textContent = pendientes === 1 ? "Tienes 1 reserva pendiente de pago." : `Tienes ${pendientes} reservas pendientes de pago.`;
+    }
+    this.render(lista, this.#reservas.length
+      ? this.#reservas.map((r) => PaginaCuenta.tarjeta(r)).join("")
+      : Plantillas.vacio("Aún no has reservado", "Elige un tutor, añade horas al carrito y págalas en la caja: aparecerán aquí.", { href: "tutores.html", texto: "Buscar tutor" }));
+    const destacada = this.leerParametro("reserva");
+    if (destacada) $(`[data-folio="${CSS.escape(destacada)}"]`)?.classList.add("is-destacada");
+  }
+
+  static tarjeta(r) {
+    const d = r.datos;
+    return `
+      <div class="col-md-6 col-xl-4 reveal">
+        <div class="reserva-cuenta${r.pagada ? "" : " is-pendiente"}" data-folio="${escaparHTML(d.folio)}">
+          ${Recibo.html(d, { sello: r.soloIntercambio ? "Acordado" : "Pagado" })}
+          <div class="reserva-cuenta__pie">
+            <span class="insignia ${r.pagada ? "insignia--ok" : "insignia--pendiente"}">${escaparHTML(r.estadoTexto)}</span>
+            ${r.pagada
+              ? `<span class="small txt-suave">${escaparHTML(r.metodoTexto)} · ${escaparHTML(d.referencia ?? "")}</span>`
+              : `<button class="btn btn-tinta btn-sm" type="button" data-pagar="${escaparHTML(d.folio)}">${r.soloIntercambio ? "Confirmar intercambio" : `Pagar ${Dinero.formato(d.total)}`}</button>`}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  #pagar(folio) {
+    const reserva = this.#reservas.find((r) => r.folio === folio);
+    if (!reserva) return;
+    CajaSimulada.abrir(reserva.datos, { alTerminar: () => this.#cargar() });
+  }
+}
+
+/* ------------------------------------------------------------------ */
+class PaginaAdmin extends Pagina {
+  constructor() {
+    super();
+    this.panel = new PanelAdmin($("#panelAdmin"));
+    this.cuenta.sesion.cargar().then(() => {
+      const s = this.cuenta.sesion;
+      if (s.sinServidor) { $("#adminSinServidor").hidden = false; return; }
+      if (!s.activa) { window.location.replace("entrar.html?siguiente=admin.html"); return; }
+      if (!s.esAdmin) { $("#adminSinPermiso").hidden = false; return; }
+      $("#panelAdmin").hidden = false;
+      this.panel.cargar();
+    });
   }
 }
 
@@ -394,7 +675,10 @@ const App = {
     "como-funciona": PaginaComoFunciona,
     nosotros: PaginaNosotros,
     contacto: PaginaContacto,
-    carrito: PaginaCarrito
+    carrito: PaginaCarrito,
+    entrar: PaginaEntrar,
+    "mi-cuenta": PaginaCuenta,
+    admin: PaginaAdmin
   },
 
   iniciar() {

@@ -10,17 +10,19 @@
      ArticuloCarrito   → una línea: tutor + materia + modalidad + horas
      Carrito           → las líneas, los totales, el descuento por paquete
                          y el aviso a quien esté mirando (patrón observador)
-     Reserva           → hereda de Solicitud (validacion.js): folio y fecha,
-                         más las sesiones y los importes congelados
-     PlantillasCarrito → HTML de las líneas, el resumen y el historial
+     Reserva           → una reserva tal como la guarda el servidor, con
+                         los textos que necesita la interfaz
+     PlantillasCarrito → HTML de las líneas y del resumen
      ModalReserva      → ventana para elegir materia, modalidad y horas
      VistaCarrito      → botón de la cabecera, panel lateral y botones
                          «Al carrito» de las tarjetas de tutor
-     FormularioReserva → datos del estudiante, forma de pago y confirmación
+     FormularioReserva → datos de contacto; crea la reserva en el servidor
+                         y abre la caja para pagarla (caja.js)
      Tienda            → arranca el carrito una sola vez por página
 
-   Aún no hay base de datos: el carrito y las reservas viven en el
-   navegador. En el Proyecto 2 la reserva se enviará al servidor.
+   El carrito vive en el navegador (localStorage) mientras se elige; al
+   confirmar, la reserva se guarda en la base de datos a nombre de la
+   cuenta con la que se entró. El servidor recalcula todos los importes.
    ===================================================================== */
 "use strict";
 
@@ -208,38 +210,38 @@ class Carrito {
 }
 
 /* ------------------------------------------------------------------ */
-/** Una reserva confirmada. Hereda folio y fecha de Solicitud. */
-class Reserva extends Solicitud {
-  static prefijo = "RES";
+/** Una reserva tal como la guarda el servidor, con los textos que necesita la interfaz. */
+class Reserva {
+  #datos;
 
-  /** Congela el carrito: si mañana cambia una tarifa, esta reserva no cambia. */
-  constructor(cliente, carrito) {
-    super({
-      ...cliente,
-      sesiones: carrito.articulos.map((a) => ({
-        tutor: a.tutor.id,
-        tutorNombre: a.tutor.nombre,
-        materia: a.materia,
-        materiaNombre: a.materiaNombre,
-        modalidad: a.modalidad,
-        horas: a.horas,
-        precioHora: a.precioHora,
-        subtotal: a.subtotal,
-        intercambio: a.esIntercambio
-      })),
-      horas: carrito.totalHoras,
-      subtotal: carrito.subtotal,
-      descuento: carrito.descuento,
-      total: carrito.total
-    });
+  constructor(datos) { this.#datos = datos; }
+
+  get datos() { return this.#datos; }
+  get folio() { return this.#datos.folio; }
+  get pagada() { return this.#datos.estado === "pagada"; }
+  get soloIntercambio() { return this.#datos.total === 0; }
+  get tieneIntercambio() { return this.#datos.lineas.some((l) => l.intercambio); }
+  get tutores() { return [...new Set(this.#datos.lineas.map((l) => l.tutorNombre))]; }
+
+  get estadoTexto() {
+    if (!this.pagada) return "Pendiente de pago";
+    return this.soloIntercambio ? "Intercambio acordado" : "Pagada";
   }
 
-  static textoPago(pago) {
-    return {
-      yappy: "Yappy al tutor, al terminar cada sesión",
-      efectivo: "Efectivo al tutor, al terminar cada sesión",
-      intercambio: "Intercambio de materias, sin dinero"
-    }[pago] ?? pago;
+  get metodoTexto() { return Reserva.textoMetodo(this.#datos.metodoPago); }
+
+  get fechaTexto() { return fechaLegible(this.#datos.creada); }
+
+  coincide(texto) {
+    const t = normalizarTexto(texto);
+    if (!t) return true;
+    const d = this.#datos;
+    return [d.folio, d.usuarioNombre, d.usuarioCorreo, ...d.lineas.flatMap((l) => [l.tutorNombre, l.materiaNombre])]
+      .some((campo) => normalizarTexto(campo).includes(t));
+  }
+
+  static textoMetodo(metodo) {
+    return { yappy: "Yappy", tarjeta: "Tarjeta de prueba", intercambio: "Intercambio" }[metodo] ?? "—";
   }
 }
 
@@ -302,31 +304,6 @@ class PlantillasCarrito {
         ${c.descuento ? `<div class="is-descuento"><dt>Paquete de parcial (−10 %)</dt><dd>−${Dinero.formato(c.descuento)}</dd></div>` : ""}
         <div class="is-total"><dt>Total</dt><dd>${Dinero.formato(c.total)}</dd></div>
       </dl>`;
-  }
-
-  static sesionConfirmada(s) {
-    const modalidad = { presencial: "presencial", virtual: "virtual" }[s.modalidad] ?? s.modalidad;
-    return `
-      <li>
-        <span><strong>${escaparHTML(s.materiaNombre)}</strong> con ${escaparHTML(s.tutorNombre)} · ${s.horas} h ${escaparHTML(modalidad)}</span>
-        <span class="text-nowrap">${s.intercambio ? "Intercambio" : Dinero.formato(s.subtotal)}</span>
-      </li>`;
-  }
-
-  static reservaPrevia(r) {
-    const fecha = new Date(r.fecha).toLocaleString("es-PA", { dateStyle: "medium", timeStyle: "short" });
-    const tutores = [...new Set((r.sesiones ?? []).map((s) => s.tutorNombre))].join(", ");
-    return `
-      <li class="reserva-previa">
-        <div>
-          <strong class="reserva-previa__folio">${escaparHTML(r.folio)}</strong>
-          <span class="txt-suave small d-block">${escaparHTML(fecha)} · ${escaparHTML(tutores)}</span>
-        </div>
-        <div class="text-end">
-          <strong>${Dinero.formato(r.total ?? 0)}</strong>
-          <span class="txt-suave small d-block">${r.horas ?? 0} h</span>
-        </div>
-      </li>`;
   }
 }
 
@@ -591,16 +568,18 @@ class VistaCarrito {
 }
 
 /* ------------------------------------------------------------------ */
+/**
+ * Datos de contacto de la reserva. Al enviarlo, la reserva se crea en el
+ * servidor a nombre de la cuenta abierta (queda «pendiente de pago») y se
+ * entrega a quien la vaya a cobrar: la caja de caja.js.
+ */
 class FormularioReserva {
-  #form; #carrito; #almacen; #alConfirmar; #campos = new Map(); #enviando = false;
-  #grupoPago; #grupoIntercambio;
+  #form; #carrito; #alReservar; #campos = new Map(); #enviando = false; #grupoIntercambio;
 
-  constructor(formulario, carrito, { almacen, alConfirmar } = {}) {
+  constructor(formulario, carrito, { alReservar } = {}) {
     this.#form = formulario;
     this.#carrito = carrito;
-    this.#almacen = almacen ?? new AlmacenLocal("alapar:reservas");
-    this.#alConfirmar = alConfirmar;
-    this.#grupoPago = $('[data-grupo="pago"]', formulario);
+    this.#alReservar = alReservar;
     this.#grupoIntercambio = $('[data-grupo="intercambio"]', formulario);
 
     this.#form.setAttribute("novalidate", "");
@@ -614,13 +593,10 @@ class FormularioReserva {
   #definirCampos() {
     const c = this.#carrito;
     const definicion = [
-      ["nombre", [Validador.requerido("Dinos a nombre de quién va la reserva."), Validador.longitudMinima(3, "El nombre debe tener al menos 3 letras."), Validador.soloLetras()]],
-      ["correo", [Validador.requerido("Necesitamos un correo para enviarte la confirmación."), Validador.correo()]],
       ["telefono", [Validador.requerido("Tu tutor te escribe por WhatsApp para fijar la hora."), Validador.telefonoPanama()]],
-      ["pago", [Validador.personalizada((v) => !c.tienePagados || v !== "", "Elige cómo le pagarás al tutor.")]],
       ["ofrece", [Validador.personalizada((v) => !c.tieneIntercambio || v !== "", "Elige la materia que das a cambio.")]],
       ["disponibilidad", [Validador.requerido("Cuéntanos qué días y a qué horas puedes."), Validador.longitudMinima(10, "Danos un poco más de detalle: mínimo 10 caracteres."), Validador.longitudMaxima(300, "Máximo 300 caracteres.")]],
-      ["acepto", [Validador.marcado("Confirma que entiendes cómo se paga.")]]
+      ["acepto", [Validador.marcado("Confirma que entiendes que el pago es simulado.")]]
     ];
     for (const [nombre, reglas] of definicion) {
       const campo = new CampoFormulario(nombre, this.#form, reglas);
@@ -641,24 +617,20 @@ class FormularioReserva {
     select.innerHTML = html;
   }
 
-  /** La forma de pago solo aparece si hay horas pagadas; la materia a cambio, si hay intercambio. */
+  /** La materia a cambio solo se pide si el carrito tiene horas por intercambio. */
   #ajustarGrupos() {
-    const c = this.#carrito;
-    if (this.#grupoPago) {
-      this.#grupoPago.hidden = !c.tienePagados;
-      if (!c.tienePagados) this.#campos.get("pago")?.limpiar();
-    }
-    if (this.#grupoIntercambio) {
-      this.#grupoIntercambio.hidden = !c.tieneIntercambio;
-      if (!c.tieneIntercambio) this.#campos.get("ofrece")?.limpiar();
-    }
+    if (!this.#grupoIntercambio) return;
+    const hay = this.#carrito.tieneIntercambio;
+    this.#grupoIntercambio.hidden = !hay;
+    if (!hay) this.#campos.get("ofrece")?.limpiar();
   }
 
-  #enviar(evento) {
+  async #enviar(evento) {
     evento.preventDefault();
     if (this.#enviando) return;
     if (this.#form.elements.sitio?.value) return; // trampa anti-bots
-    if (this.#carrito.vacio) { Aviso.mostrar("Tu carrito está vacío: añade horas con algún tutor."); return; }
+    const c = this.#carrito;
+    if (c.vacio) { Aviso.mostrar("Tu carrito está vacío: añade horas con algún tutor."); return; }
 
     let primerInvalido = null;
     for (const campo of this.#campos.values()) {
@@ -675,31 +647,30 @@ class FormularioReserva {
     const boton = $('button[type="submit"]', this.#form);
     const textoOriginal = boton.innerHTML;
     boton.disabled = true;
-    boton.textContent = "Confirmando…";
+    boton.textContent = "Guardando tu reserva…";
 
-    const c = this.#carrito;
-    const datos = {};
-    for (const [nombre, campo] of this.#campos) datos[nombre] = campo.valor;
-    delete datos.acepto;
-    if (!c.tienePagados) datos.pago = "intercambio";
-    if (!c.tieneIntercambio) delete datos.ofrece;
-
-    const reserva = new Reserva(datos, c);
-    this.#almacen.agregar(reserva);
-
-    // Simulamos la latencia de red. En el Proyecto 2 aquí irá el envío real a la BD.
-    window.setTimeout(() => {
+    try {
+      const { reserva } = await ClienteApi.crearReserva({
+        lineas: c.articulos.map((a) => a.toJSON()),
+        telefono: this.#campos.get("telefono").valor,
+        disponibilidad: this.#campos.get("disponibilidad").valor,
+        ofrece: c.tieneIntercambio ? this.#campos.get("ofrece").valor : undefined
+      });
+      // La reserva ya está en la base de datos: el carrito se vacía.
       c.vaciar();
       this.#form.reset();
       this.#campos.forEach((campo) => campo.limpiar());
+      this.#alReservar?.(reserva);
+    } catch (error) {
+      for (const [nombre, mensaje] of Object.entries(error.detalles ?? {})) this.#campos.get(nombre)?.marcarError(mensaje);
+      if (error.estado === 401) Cuenta.sesion?.recargar();
+      Aviso.mostrar(error.message, 5000);
+    } finally {
       boton.disabled = false;
       boton.innerHTML = textoOriginal;
       this.#enviando = false;
-      this.#alConfirmar?.(reserva);
-    }, 700);
+    }
   }
-
-  listarReservas() { return this.#almacen.leer(); }
 }
 
 /* ------------------------------------------------------------------ */

@@ -1,0 +1,144 @@
+<!-- {"titulo": "Panel de administración", "descripcion": "Panel de administración de A la Par: personas registradas, compras, ingresos simulados y tutores más reservados.", "pagina": "admin"} -->
+
+    <!-- ============ CABECERA ============ -->
+    <section class="cabecera cabecera--compacta cabecera--admin" aria-labelledby="titulo-pagina">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+          <div>
+            <span class="eyebrow">Administración</span>
+            <h1 id="titulo-pagina">Panel de <mark data-manual class="is-visible">administración</mark></h1>
+          </div>
+          <div class="d-flex align-items-center gap-3">
+            <span class="txt-mono txt-suave" id="panelActualizado" aria-live="polite"></span>
+            <button class="btn btn-linea btn-sm" type="button" id="actualizarPanel">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 4v5h-5"/></svg>
+              Actualizar
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion pt-2" aria-label="Datos de la plataforma">
+      <div class="container">
+        <div class="aviso-servidor" id="adminSinServidor" role="status" hidden>
+          <strong>El servidor no está disponible.</strong> El panel necesita la base de datos: ábrelo en <a href="https://alapar-utp.vercel.app/admin">alapar-utp.vercel.app</a>.
+        </div>
+        <div class="vacio" id="adminSinPermiso" hidden>
+          <h2 class="h3">Esta página es solo para administración</h2>
+          <p class="txt-suave mb-3">Tu cuenta es de estudiante. Si quieres ver el panel, entra con la cuenta de administración de demostración.</p>
+          <a class="btn btn-tinta" href="entrar.html?siguiente=admin.html">Cambiar de cuenta</a>
+        </div>
+
+        <div id="panelAdmin" class="panel-admin" hidden>
+          <!-- Cifras -->
+          <div class="row g-3 mb-4" id="kpis" aria-label="Cifras principales"></div>
+
+          <div class="row g-4 mb-4">
+            <!-- Ingresos por día -->
+            <div class="col-lg-8">
+              <section class="tarjeta-admin" aria-labelledby="grafico-titulo">
+                <div class="tarjeta-admin__cabecera">
+                  <div>
+                    <h2 class="tarjeta-admin__titulo" id="grafico-titulo">Ingresos por día</h2>
+                    <p class="tarjeta-admin__sub">Últimos 14 días · pagos simulados · <span id="resumenDias"></span></p>
+                  </div>
+                </div>
+                <div class="grafico" id="graficoDias" role="group" aria-label="Columnas de ingresos por día; cada columna se puede enfocar para ver su valor"></div>
+                <details class="grafico__datos">
+                  <summary>Ver los datos en una tabla</summary>
+                  <div class="table-responsive"><table class="tabla-admin tabla-admin--compacta" id="tablaDias"></table></div>
+                </details>
+              </section>
+            </div>
+
+            <!-- Tutores más reservados -->
+            <div class="col-lg-4">
+              <section class="tarjeta-admin h-100" aria-labelledby="ranking-titulo">
+                <div class="tarjeta-admin__cabecera">
+                  <div>
+                    <h2 class="tarjeta-admin__titulo" id="ranking-titulo">Tutores más reservados</h2>
+                    <p class="tarjeta-admin__sub">Horas pagadas e importe antes de descuentos</p>
+                  </div>
+                </div>
+                <ol class="ranking" id="rankingTutores"></ol>
+              </section>
+            </div>
+          </div>
+
+          <!-- Compras -->
+          <section class="tarjeta-admin mb-4" aria-labelledby="compras-titulo">
+            <div class="tarjeta-admin__cabecera flex-wrap">
+              <div>
+                <h2 class="tarjeta-admin__titulo" id="compras-titulo">Compras</h2>
+                <p class="tarjeta-admin__sub" id="conteoCompras" aria-live="polite"></p>
+              </div>
+              <div class="d-flex flex-wrap align-items-center gap-2">
+                <div class="chips" id="filtrosCompras" role="group" aria-label="Filtrar compras">
+                  <button class="chip is-active" type="button" data-filtro="todas" aria-pressed="true">Todas <span class="num"></span></button>
+                  <button class="chip" type="button" data-filtro="pagadas" aria-pressed="false">Pagadas <span class="num"></span></button>
+                  <button class="chip" type="button" data-filtro="pendientes" aria-pressed="false">Pendientes <span class="num"></span></button>
+                  <button class="chip" type="button" data-filtro="intercambio" aria-pressed="false">Con intercambio <span class="num"></span></button>
+                </div>
+                <label class="buscador buscador--admin mb-0">
+                  <span class="visually-hidden">Buscar compras</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                  <input class="form-control" type="search" id="buscarCompras" placeholder="Folio, estudiante o tutor" autocomplete="off">
+                </label>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="tabla-admin" id="tablaCompras">
+                <caption class="visually-hidden">Compras de horas de tutoría; elige un folio para ver el recibo</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Folio</th><th scope="col">Fecha</th><th scope="col">Estudiante</th><th scope="col">Sesiones</th>
+                    <th scope="col" class="num">Horas</th><th scope="col" class="num">Total</th><th scope="col">Método</th><th scope="col">Estado</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Personas registradas -->
+          <section class="tarjeta-admin" aria-labelledby="personas-titulo">
+            <div class="tarjeta-admin__cabecera flex-wrap">
+              <div>
+                <h2 class="tarjeta-admin__titulo" id="personas-titulo">Personas registradas</h2>
+                <p class="tarjeta-admin__sub" id="conteoPersonas" aria-live="polite"></p>
+              </div>
+              <label class="buscador buscador--admin mb-0">
+                <span class="visually-hidden">Buscar personas</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input class="form-control" type="search" id="buscarPersonas" placeholder="Nombre, correo o carrera" autocomplete="off">
+              </label>
+            </div>
+            <div class="table-responsive">
+              <table class="tabla-admin" id="tablaPersonas">
+                <caption class="visually-hidden">Personas registradas en la plataforma</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Persona</th><th scope="col">Carrera</th><th scope="col">Registro</th><th scope="col">Último acceso</th>
+                    <th scope="col" class="num">Reservas</th><th scope="col" class="num">Pagado</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- Detalle de una compra -->
+    <div class="offcanvas offcanvas-end detalle-compra" tabindex="-1" id="detalleCompra" aria-labelledby="detalleCompraTitulo">
+      <div class="offcanvas-header">
+        <div>
+          <span class="eyebrow">Compra</span>
+          <h2 class="carrito-lateral__titulo" id="detalleCompraTitulo" data-detalle-titulo></h2>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar el detalle"></button>
+      </div>
+      <div class="offcanvas-body" data-detalle-cuerpo></div>
+    </div>

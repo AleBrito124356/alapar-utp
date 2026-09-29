@@ -58,6 +58,35 @@
         </ul>
 
         <div class="d-flex align-items-center gap-2">
+          <!-- Cuenta: «Entrar» sin sesión; iniciales y menú con sesión (lo pinta js/sesion.js) -->
+          <a class="boton-cuenta" href="entrar.html" data-sesion-invitado aria-label="Entrar o crear cuenta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6.5 8-6.5s7.2 2.5 8 6.5"/></svg>
+          </a>
+          <div class="dropdown" data-sesion-menu hidden>
+            <button class="boton-cuenta boton-cuenta--activa" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" data-sesion-boton aria-label="Tu cuenta">
+              <span data-sesion-iniciales>·</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end menu-cuenta">
+              <div class="menu-cuenta__cabecera">
+                <span class="menu-cuenta__rol" data-sesion-rol>Estudiante</span>
+                <strong data-sesion-nombre></strong>
+                <span class="menu-cuenta__correo" data-sesion-correo></span>
+              </div>
+              <a class="dropdown-item" href="mi-cuenta.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                Mis reservas
+              </a>
+              <a class="dropdown-item" href="admin.html" data-solo-admin hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                Panel de administración
+              </a>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" type="button" data-sesion-salir>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3"/></svg>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
           <button class="boton-carrito" type="button" data-carrito-boton data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral" aria-label="Carrito vacío">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.4a1.6 1.6 0 0 0 1.5-1.2L20.5 8H6.1"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>
             <span class="boton-carrito__num" data-carrito-num hidden>0</span>
@@ -100,6 +129,11 @@
         </ul>
       </nav>
       <div class="mt-auto pt-4">
+        <a class="btn btn-linea w-100 justify-content-center mb-2" href="entrar.html" data-sesion-invitado>Entrar o crear cuenta</a>
+        <div data-sesion-menu hidden>
+          <a class="btn btn-linea w-100 justify-content-center mb-2" href="mi-cuenta.html">Mis reservas</a>
+          <a class="btn btn-linea w-100 justify-content-center mb-2" href="admin.html" data-solo-admin hidden>Panel de administración</a>
+        </div>
         <a class="btn btn-tinta w-100 justify-content-center" href="tutores.html">Buscar tutor</a>
         <p class="txt-mono txt-suave mt-3 mb-0">Tutorías entre pares · UTP</p>
       </div>
@@ -130,7 +164,7 @@
       <a class="btn btn-tinta w-100 justify-content-center mt-3" href="carrito.html">Revisar y reservar
         <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
-      <p class="carrito-lateral__nota">No cobramos en línea: pagas a tu tutor al terminar cada sesión.</p>
+      <p class="carrito-lateral__nota">Pagas en la caja al confirmar. Es una demostración: el pago es simulado.</p>
     </div>
   </div>
   <p class="visually-hidden" id="carritoAnuncio" role="status" aria-live="polite"></p>
@@ -428,6 +462,30 @@
     </div>
   </div>
 
+  <!-- Caja: pago simulado de una reserva (la anima js/caja.js) -->
+  <div class="modal fade modal-caja" id="modalCaja" tabindex="-1" aria-labelledby="cajaTitulo" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-md-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">Caja · pago simulado</span>
+            <h2 class="modal-title" id="cajaTitulo" tabindex="-1">Paga tu reserva</h2>
+          </div>
+          <button type="button" class="btn-close" data-caja-cerrar aria-label="Cerrar la caja"></button>
+        </div>
+        <div class="modal-body caja" data-caja-fase="metodo">
+          <div class="caja__recibo" data-caja="recibo"></div>
+          <div class="caja__panel" data-caja="panel"></div>
+        </div>
+        <p class="visually-hidden" role="status" aria-live="polite" data-caja="anuncio"></p>
+      </div>
+    </div>
+  </div>
+  <!-- Textura de tinta del sello «Pagado» -->
+  <svg class="visually-hidden" aria-hidden="true" focusable="false">
+    <filter id="tinta-sello"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="ruido"/><feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.6"/></filter>
+  </svg>
+
   <!-- Aviso flotante reutilizable -->
   <div class="toast-container position-fixed bottom-0 end-0 p-3">
     <div id="avisoGlobal" class="toast align-items-center" role="status" aria-live="polite" aria-atomic="true">
@@ -444,7 +502,10 @@
   <script src="js/modelos.js" defer></script>
   <script src="js/ui.js" defer></script>
   <script src="js/validacion.js" defer></script>
+  <script src="js/sesion.js" defer></script>
   <script src="js/carrito.js" defer></script>
+  <script src="js/caja.js" defer></script>
+  <script src="js/admin.js" defer></script>
   <script src="js/paginas.js" defer></script>
 </body>
 </html>

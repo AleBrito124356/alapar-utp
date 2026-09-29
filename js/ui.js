@@ -23,6 +23,13 @@ const escaparHTML = (valor) =>
 
 const prefiereMenosMovimiento = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+/** "29 sept 2026 · 4:14 p. m." (el estilo «medium» de es-PA daría 09/29/2026). */
+const fechaLegible = (iso, { hora = true } = {}) => {
+  const d = new Date(iso);
+  const fecha = d.toLocaleDateString("es-PA", { day: "numeric", month: "short", year: "numeric" });
+  return hora ? `${fecha} · ${d.toLocaleTimeString("es-PA", { hour: "numeric", minute: "2-digit" })}` : fecha;
+};
+
 /** 1 → "1.er", 2 → "2.º", 3 → "3.er" */
 const ordinal = (n) => `${n}.${n === 1 || n === 3 ? "er" : "º"}`;
 
@@ -89,12 +96,13 @@ class Revelador {
 
 /* ------------------------------------------------------------------ */
 class ContadorAnimado {
-  #el; #valor; #decimales; #sufijo; #duracion; #iniciado = false;
+  #el; #valor; #decimales; #prefijo; #sufijo; #duracion; #iniciado = false;
 
   constructor(el, duracion = 1700) {
     this.#el = el;
     this.#valor = parseFloat(el.dataset.contar);
     this.#decimales = Number(el.dataset.decimales ?? 0);
+    this.#prefijo = el.dataset.prefijo ?? "";
     this.#sufijo = el.dataset.sufijo ?? "";
     this.#duracion = duracion;
   }
@@ -115,7 +123,7 @@ class ContadorAnimado {
   }
 
   #formatear(n) {
-    return n.toLocaleString("es-PA", { minimumFractionDigits: this.#decimales, maximumFractionDigits: this.#decimales }) + this.#sufijo;
+    return this.#prefijo + n.toLocaleString("es-PA", { minimumFractionDigits: this.#decimales, maximumFractionDigits: this.#decimales }) + this.#sufijo;
   }
 
   static observarTodos(contexto = document) {
@@ -376,7 +384,7 @@ class Plantillas {
     return `
       <div class="col-6 col-lg-3 reveal">
         <div class="dato">
-          <span class="dato__valor"><span data-contar="${e.valor}" data-decimales="${e.decimales ?? 0}" data-sufijo="${escaparHTML(e.sufijo ?? "")}">0</span></span>
+          <span class="dato__valor"><span data-contar="${e.valor}" data-decimales="${e.decimales ?? 0}" data-prefijo="${escaparHTML(e.prefijo ?? "")}" data-sufijo="${escaparHTML(e.sufijo ?? "")}">${escaparHTML(e.prefijo ?? "")}0</span></span>
           <span class="dato__texto">${escaparHTML(e.texto)}</span>
         </div>
       </div>`;

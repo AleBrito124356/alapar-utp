@@ -5,3 +5,8 @@ Thumbs.db
 .DS_Store
 
 node_modules/
+
+# Backend local
+.env*
+!.env.example
+desarrollo/.pglite/

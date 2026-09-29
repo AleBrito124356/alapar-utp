@@ -7,5 +7,5 @@ README.md
 docs
 pruebas
 node_modules
-package.json
-package-lock.json
+desarrollo
+.env*

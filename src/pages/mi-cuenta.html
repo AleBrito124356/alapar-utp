@@ -1,0 +1,44 @@
+<!-- {"titulo": "Mis reservas", "descripcion": "Tus reservas de tutoría en A la Par: recibos, estado del pago y las que tienes pendientes.", "pagina": "mi-cuenta"} -->
+
+    <!-- ============ CABECERA ============ -->
+    <section class="cabecera cabecera--compacta" aria-labelledby="titulo-pagina">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+          <div>
+            <span class="eyebrow">Mi cuenta</span>
+            <h1 id="titulo-pagina" class="reveal">Hola, <mark id="cuentaNombre">de nuevo</mark>.</h1>
+            <p class="lead reveal mb-0" id="cuentaDetalle"></p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-linea btn-sm" href="admin.html" id="irPanelAdmin" hidden>Panel de administración</a>
+            <button class="btn btn-linea btn-sm" type="button" data-sesion-salir>Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion pt-2" aria-labelledby="reservas-titulo">
+      <div class="container">
+        <div class="aviso-servidor" id="cuentaSinServidor" role="status" hidden>
+          <strong>El servidor no está disponible.</strong>
+          Abre el sitio publicado en <a href="https://alapar-utp.vercel.app/mi-cuenta">alapar-utp.vercel.app</a> para ver tus reservas.
+        </div>
+
+        <div id="cuentaContenido">
+          <div class="row g-4 mb-5" id="cuentaCifras" data-stagger aria-label="Tus cifras"></div>
+
+          <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-3 mb-4">
+            <h2 id="reservas-titulo" class="h3 mb-0">Mis reservas</h2>
+            <p class="insignia insignia--pendiente mb-0" id="cuentaPendientes" hidden></p>
+            <a class="enlace-flecha" href="tutores.html">Reservar más horas
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+          <div class="row g-4" id="listaReservas" data-stagger aria-live="polite">
+            <div class="col-md-6 col-xl-4"><div class="esqueleto"></div></div>
+            <div class="col-md-6 col-xl-4"><div class="esqueleto"></div></div>
+            <div class="col-md-6 col-xl-4 d-none d-xl-block"><div class="esqueleto"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>

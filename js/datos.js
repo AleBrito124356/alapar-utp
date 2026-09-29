@@ -151,7 +151,7 @@ const DATOS = {
 
   /* Preguntas frecuentes */
   preguntas: [
-    { pregunta: "¿Cuánto cuesta una tutoría?", respuesta: "Cada tutor fija su tarifa, normalmente entre $5 y $8 por hora, y desde 4 horas pagadas en una misma reserva se aplica un 10 % de descuento. También existe la modalidad de intercambio: tú das una materia que dominas y recibes otra, sin dinero de por medio. El pago se hace al tutor al terminar cada sesión, nunca por adelantado." },
+    { pregunta: "¿Cuánto cuesta una tutoría?", respuesta: "Cada tutor fija su tarifa, normalmente entre $5 y $8 por hora, y desde 4 horas pagadas en una misma reserva se aplica un 10 % de descuento. También existe la modalidad de intercambio: tú das una materia que dominas y recibes otra, sin dinero de por medio. Se paga en la caja al confirmar la reserva, con Yappy o con tarjeta; en esta demostración el pago es simulado." },
     { pregunta: "¿Quién puede ser tutor?", respuesta: "Cualquier estudiante activo de la UTP que haya aprobado la materia con buena calificación. Antes de publicar su perfil hacemos una entrevista corta y verificamos que sigue matriculado." },
     { pregunta: "¿Las sesiones son presenciales o virtuales?", respuesta: "Las dos. Presenciales en el campus (biblioteca, cafetería, aulas libres) o virtuales por videollamada. Cada tutor indica qué modalidades ofrece." },
     { pregunta: "¿Cómo agendo una sesión?", respuesta: "Eliges al tutor, añades al carrito la materia, la modalidad y las horas, y confirmas la reserva con tu disponibilidad. El tutor te escribe por correo o WhatsApp en menos de 24 horas para fijar el día. Si antes quieres preguntar algo, usa el formulario de contacto." },

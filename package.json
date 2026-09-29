@@ -1,16 +1,25 @@
 {
   "name": "alapar-utp",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "A la Par: tutorías entre estudiantes de la UTP. Proyecto N.º 1 de Ingeniería Web.",
+  "description": "A la Par: tutorías entre estudiantes de la UTP, con cuentas, carrito, caja de pago simulado y panel de administración sobre PostgreSQL.",
   "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
+    "dev": "node desarrollo/servidor.mjs",
     "paginas": "node build.mjs",
-    "servir": "npx --yes http-server . -p 5183 -c-1",
-    "prueba": "node pruebas/carrito.e2e.mjs http://localhost:5183/",
-    "capturas": "node pruebas/carrito.e2e.mjs http://localhost:5183/ docs/capturas"
+    "prueba": "node pruebas/api.prueba.mjs && node pruebas/sitio.e2e.mjs",
+    "prueba:api": "node pruebas/api.prueba.mjs",
+    "prueba:sitio": "node pruebas/sitio.e2e.mjs",
+    "capturas": "node pruebas/sitio.e2e.mjs \"\" docs/capturas"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.1.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "playwright": "1.49.1"
   }
 }

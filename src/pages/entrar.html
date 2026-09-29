@@ -1,0 +1,170 @@
+<!-- {"titulo": "Entrar", "descripcion": "Entra a A la Par o crea tu cuenta para guardar tus reservas de tutoría y pagarlas en la caja. Incluye cuentas de demostración de estudiante y de administración.", "pagina": "entrar"} -->
+
+    <!-- ============ CABECERA ============ -->
+    <section class="cabecera cabecera--compacta" aria-labelledby="titulo-pagina">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <span class="eyebrow">Tu cuenta</span>
+            <h1 id="titulo-pagina" class="reveal">Entra y reserva <mark>a la par</mark>.</h1>
+            <p class="lead reveal">Con tu cuenta, tus reservas quedan guardadas y puedes pagarlas cuando quieras. ¿Solo quieres mirar cómo funciona? Usa una de las cuentas de demostración.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ACCESO ============ -->
+    <section class="seccion pt-2" aria-label="Entrar o crear cuenta">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-7">
+            <div class="aviso-servidor mb-4" id="avisoServidor" role="status" hidden>
+              <strong>El servidor no está disponible.</strong>
+              Para entrar hace falta la base de datos: abre el sitio publicado en <a href="https://alapar-utp.vercel.app/entrar">alapar-utp.vercel.app</a> o ejecuta <code>npm run dev</code>.
+            </div>
+
+            <!-- Ya con sesión -->
+            <div class="panel-formulario ya-dentro" id="yaDentro" hidden>
+              <span class="ya-dentro__avatar" aria-hidden="true" data-sesion-iniciales></span>
+              <div>
+                <h2 class="h3 mb-1">Ya entraste como <span data-sesion-nombre></span></h2>
+                <p class="txt-suave mb-3" data-sesion-correo></p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a class="btn btn-tinta" href="mi-cuenta.html">Ir a mis reservas</a>
+                  <a class="btn btn-linea" href="admin.html" id="irPanel" hidden>Panel de administración</a>
+                  <button class="btn btn-linea" type="button" data-sesion-salir>Cerrar sesión</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-formulario panel-acceso" id="panelFormularios">
+              <div class="pestanas pestanas--acceso" role="tablist" aria-label="Entrar o crear cuenta" data-activa="0">
+                <button class="pestana is-activa" type="button" role="tab" id="pestanaEntrar" aria-selected="true" aria-controls="formEntrar" data-pestana="entrar">Entrar</button>
+                <button class="pestana" type="button" role="tab" id="pestanaRegistro" aria-selected="false" aria-controls="formRegistro" tabindex="-1" data-pestana="registro">Crear cuenta</button>
+                <span class="pestanas__marcador" aria-hidden="true"></span>
+              </div>
+
+              <!-- Entrar -->
+              <form id="formEntrar" role="tabpanel" aria-labelledby="pestanaEntrar" action="#" method="post" novalidate autocomplete="on">
+                <div class="alerta-form" role="alert" hidden></div>
+                <div class="row g-3">
+                  <div class="col-12" data-campo="correo">
+                    <label class="form-label" for="entrarCorreo">Correo</label>
+                    <input class="form-control" type="email" id="entrarCorreo" name="correo" placeholder="nombre@utp.ac.pa" autocomplete="username" inputmode="email" required>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-12" data-campo="clave">
+                    <label class="form-label" for="entrarClave">Contraseña</label>
+                    <div class="campo-clave">
+                      <input class="form-control" type="password" id="entrarClave" name="clave" autocomplete="current-password" required>
+                      <button class="campo-clave__ver" type="button" data-ver-clave="entrarClave" aria-pressed="false" aria-label="Mostrar contraseña">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-12 mt-4">
+                    <button class="btn btn-tinta btn-lg w-100 justify-content-center" type="submit">Entrar
+                      <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <p class="col-12 text-center small txt-suave mb-0">¿Aún no tienes cuenta? <a href="#formRegistro" data-ir-pestana="registro">Crea una en un minuto</a>.</p>
+                </div>
+                <!-- En el teléfono las notas de demostración quedan abajo: acceso rápido aquí -->
+                <div class="demo-rapida d-lg-none">
+                  <span class="demo-rapida__rotulo">¿Solo quieres probar?</span>
+                  <button class="btn btn-linea btn-sm" type="button" data-demo="estudiante">Estudiante demo</button>
+                  <button class="btn btn-linea btn-sm" type="button" data-demo="admin">Administración demo</button>
+                </div>
+              </form>
+
+              <!-- Crear cuenta -->
+              <form id="formRegistro" role="tabpanel" aria-labelledby="pestanaRegistro" action="#" method="post" novalidate autocomplete="on" hidden>
+                <div class="alerta-form" role="alert" hidden></div>
+                <div class="row g-3">
+                  <div class="col-md-6" data-campo="nombre">
+                    <label class="form-label" for="registroNombre">Nombre completo</label>
+                    <input class="form-control" type="text" id="registroNombre" name="nombre" placeholder="Ej.: Ana Pérez" autocomplete="name" required minlength="3">
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-md-6" data-campo="correo">
+                    <label class="form-label" for="registroCorreo">Correo</label>
+                    <input class="form-control" type="email" id="registroCorreo" name="correo" placeholder="nombre@utp.ac.pa" autocomplete="email" inputmode="email" required>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="registroCarrera">Carrera <span class="txt-suave fw-normal">(opcional)</span></label>
+                    <input class="form-control" type="text" id="registroCarrera" name="carrera" list="carrerasUtp" maxlength="80" autocomplete="off">
+                    <datalist id="carrerasUtp">
+                      <option value="Lic. en Ingeniería de Software"></option>
+                      <option value="Ing. de Sistemas y Computación"></option>
+                      <option value="Lic. en Redes Informáticas"></option>
+                      <option value="Ing. Industrial"></option>
+                      <option value="Ing. Civil"></option>
+                      <option value="Ing. Eléctrica y Electrónica"></option>
+                      <option value="Ing. Mecánica"></option>
+                    </datalist>
+                  </div>
+                  <div class="col-md-6" data-campo="clave">
+                    <label class="form-label" for="registroClave">Contraseña</label>
+                    <div class="campo-clave">
+                      <input class="form-control" type="password" id="registroClave" name="clave" autocomplete="new-password" required minlength="8">
+                      <button class="campo-clave__ver" type="button" data-ver-clave="registroClave" aria-pressed="false" aria-label="Mostrar contraseña">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </div>
+                    <div class="form-text">Mínimo 8 caracteres. Se guarda cifrada con scrypt: nadie puede leerla.</div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-12" data-campo="acepto">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="registroAcepto" name="acepto" required>
+                      <label class="form-check-label" for="registroAcepto">Entiendo que es un proyecto académico: la cuenta de administración de demostración es pública, así que no usaré mi correo ni una contraseña reales.</label>
+                      <div class="invalid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-4">
+                    <button class="btn btn-tinta btn-lg w-100 justify-content-center" type="submit">Crear mi cuenta
+                      <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <p class="col-12 text-center small txt-suave mb-0">¿Ya tienes cuenta? <a href="#formEntrar" data-ir-pestana="entrar">Entra</a>.</p>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Cuentas de demostración -->
+          <div class="col-lg-5">
+            <aside class="demo-cuentas" aria-labelledby="demo-titulo">
+              <span class="eyebrow">Para probar</span>
+              <h2 id="demo-titulo" class="h3">Cuentas de demostración</h2>
+              <p class="txt-suave">Un toque en la nota y entras. La de estudiante reserva y paga en la caja simulada; la de administración ve a todas las personas registradas y todas las compras.</p>
+
+              <div class="notas-demo">
+                <article class="nota nota--demo" style="--nota-bg:#fff3b0;--rot:-1.6deg">
+                  <span class="nota-demo__rol">Estudiante</span>
+                  <dl class="credenciales">
+                    <dt>Correo</dt><dd>estudiante@alapar.demo</dd>
+                    <dt>Contraseña</dt><dd>Estudiante2026</dd>
+                  </dl>
+                  <button class="btn btn-tinta btn-sm" type="button" data-demo="estudiante">Entrar como estudiante
+                    <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </article>
+                <article class="nota nota--demo" style="--nota-bg:#e8f0ff;--rot:1.3deg">
+                  <span class="nota-demo__rol">Administración</span>
+                  <dl class="credenciales">
+                    <dt>Correo</dt><dd>admin@alapar.demo</dd>
+                    <dt>Contraseña</dt><dd>Admin2026</dd>
+                  </dl>
+                  <button class="btn btn-tinta btn-sm" type="button" data-demo="admin">Entrar como administración
+                    <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </article>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>

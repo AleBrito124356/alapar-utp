@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entrar · A la Par — Tutorías entre estudiantes de la UTP</title>
+  <meta name="description" content="Entra a A la Par o crea tu cuenta para guardar tus reservas de tutoría y pagarlas en la caja. Incluye cuentas de demostración de estudiante y de administración.">
+  <meta name="author" content="Luis Amaral, Alejandro Brito Olivera, Marcos Gaitán, Pedro Garay y David González">
+  <meta name="theme-color" content="#fbf7ef">
+  <link rel="canonical" href="https://alapar-utp.vercel.app/entrar">
+
+  <!-- Vista previa al compartir el enlace -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="A la Par">
+  <meta property="og:locale" content="es_PA">
+  <meta property="og:title" content="Entrar · A la Par">
+  <meta property="og:description" content="Entra a A la Par o crea tu cuenta para guardar tus reservas de tutoría y pagarlas en la caja. Incluye cuentas de demostración de estudiante y de administración.">
+  <meta property="og:url" content="https://alapar-utp.vercel.app/entrar">
+  <meta property="og:image" content="https://alapar-utp.vercel.app/assets/img/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <!-- Tipografías: Young Serif (títulos), Instrument Sans (texto), DM Mono (etiquetas) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Young+Serif&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap 5.3 (local) + estilos propios -->
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/estilos.css">
+  
+</head>
+<body data-pagina="entrar" class="con-nav-solido">
+  <a class="salto" href="#contenido">Saltar al contenido</a>
+
+  <!-- ============ CABECERA / NAVEGACIÓN ============ -->
+  <header class="nav-ap nav-ap--solida" id="cabecera">
+    <nav class="navbar" aria-label="Navegación principal">
+      <div class="container">
+        <a class="marca-ap" href="index.html" aria-label="A la Par, ir al inicio">
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+            <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+            <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span>a la par</span>
+        </a>
+
+        <ul class="navbar-nav d-none d-lg-flex flex-row align-items-center">
+          <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="como-funciona.html">Cómo funciona</a></li>
+          <li class="nav-item"><a class="nav-link" href="materias.html">Materias</a></li>
+          <li class="nav-item"><a class="nav-link" href="tutores.html">Tutores</a></li>
+          <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html">Contacto</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-2">
+          <!-- Cuenta: «Entrar» sin sesión; iniciales y menú con sesión (lo pinta js/sesion.js) -->
+          <a class="boton-cuenta" href="entrar.html" data-sesion-invitado aria-label="Entrar o crear cuenta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c.8-4 4-6.5 8-6.5s7.2 2.5 8 6.5"/></svg>
+          </a>
+          <div class="dropdown" data-sesion-menu hidden>
+            <button class="boton-cuenta boton-cuenta--activa" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" data-sesion-boton aria-label="Tu cuenta">
+              <span data-sesion-iniciales>·</span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end menu-cuenta">
+              <div class="menu-cuenta__cabecera">
+                <span class="menu-cuenta__rol" data-sesion-rol>Estudiante</span>
+                <strong data-sesion-nombre></strong>
+                <span class="menu-cuenta__correo" data-sesion-correo></span>
+              </div>
+              <a class="dropdown-item" href="mi-cuenta.html">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+                Mis reservas
+              </a>
+              <a class="dropdown-item" href="admin.html" data-solo-admin hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                Panel de administración
+              </a>
+              <div class="dropdown-divider"></div>
+              <button class="dropdown-item" type="button" data-sesion-salir>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3M10 17l5-5-5-5M15 12H3"/></svg>
+                Cerrar sesión
+              </button>
+            </div>
+          </div>
+          <button class="boton-carrito" type="button" data-carrito-boton data-bs-toggle="offcanvas" data-bs-target="#carritoLateral" aria-controls="carritoLateral" aria-label="Carrito vacío">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.2l2.1 10.2a1.6 1.6 0 0 0 1.6 1.3h8.4a1.6 1.6 0 0 0 1.5-1.2L20.5 8H6.1"/><circle cx="9.5" cy="19.5" r="1.3"/><circle cx="17" cy="19.5" r="1.3"/></svg>
+            <span class="boton-carrito__num" data-carrito-num hidden>0</span>
+          </button>
+          <a class="btn btn-tinta btn-cta d-none d-sm-inline-flex" href="tutores.html">
+            Buscar tutor
+            <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <button class="hamburguesa d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuLateral" aria-controls="menuLateral" aria-label="Abrir menú">
+            <span></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Menú lateral para pantallas pequeñas (offcanvas de Bootstrap) -->
+  <div class="offcanvas offcanvas-end menu-lateral" tabindex="-1" id="menuLateral" aria-labelledby="menuLateralTitulo">
+    <div class="offcanvas-header">
+      <span class="marca-ap" id="menuLateralTitulo">
+        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+          <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+          <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+        </svg>
+        <span>a la par</span>
+      </span>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar menú"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+      <nav aria-label="Navegación móvil">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="index.html"><small>01</small>Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="como-funciona.html"><small>02</small>Cómo funciona</a></li>
+          <li class="nav-item"><a class="nav-link" href="materias.html"><small>03</small>Materias</a></li>
+          <li class="nav-item"><a class="nav-link" href="tutores.html"><small>04</small>Tutores</a></li>
+          <li class="nav-item"><a class="nav-link" href="nosotros.html"><small>05</small>Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" href="contacto.html"><small>06</small>Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="carrito.html"><small>07</small>Carrito</a></li>
+        </ul>
+      </nav>
+      <div class="mt-auto pt-4">
+        <a class="btn btn-linea w-100 justify-content-center mb-2" href="entrar.html" data-sesion-invitado>Entrar o crear cuenta</a>
+        <div data-sesion-menu hidden>
+          <a class="btn btn-linea w-100 justify-content-center mb-2" href="mi-cuenta.html">Mis reservas</a>
+          <a class="btn btn-linea w-100 justify-content-center mb-2" href="admin.html" data-solo-admin hidden>Panel de administración</a>
+        </div>
+        <a class="btn btn-tinta w-100 justify-content-center" href="tutores.html">Buscar tutor</a>
+        <p class="txt-mono txt-suave mt-3 mb-0">Tutorías entre pares · UTP</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito: panel lateral con las horas elegidas (lo pinta js/carrito.js) -->
+  <div class="offcanvas offcanvas-end carrito-lateral" tabindex="-1" id="carritoLateral" aria-labelledby="carritoLateralTitulo" data-carrito-zona>
+    <div class="offcanvas-header">
+      <div>
+        <span class="eyebrow">Tu carrito</span>
+        <h2 class="carrito-lateral__titulo" id="carritoLateralTitulo" tabindex="-1" data-carrito-titulo>Horas de tutoría</h2>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar carrito"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="carrito-vacio" data-si-vacio>
+        <p class="carrito-vacio__titulo">Todavía no hay horas aquí.</p>
+        <p class="txt-suave">Elige un tutor, la materia y cuántas horas necesitas. Todo se guarda en este navegador hasta que confirmes.</p>
+        <a class="btn btn-tinta btn-sm" href="tutores.html">Buscar tutor
+          <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <ul class="lista-carrito" data-carrito-lista aria-label="Sesiones en el carrito"></ul>
+    </div>
+    <div class="carrito-lateral__pie" data-si-lleno hidden>
+      <div data-carrito-resumen></div>
+      <a class="btn btn-tinta w-100 justify-content-center mt-3" href="carrito.html">Revisar y reservar
+        <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <p class="carrito-lateral__nota">Pagas en la caja al confirmar. Es una demostración: el pago es simulado.</p>
+    </div>
+  </div>
+  <p class="visually-hidden" id="carritoAnuncio" role="status" aria-live="polite"></p>
+
+  <main id="contenido">
+
+<!-- ============ CABECERA ============ -->
+    <section class="cabecera cabecera--compacta" aria-labelledby="titulo-pagina">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <span class="eyebrow">Tu cuenta</span>
+            <h1 id="titulo-pagina" class="reveal">Entra y reserva <mark>a la par</mark>.</h1>
+            <p class="lead reveal">Con tu cuenta, tus reservas quedan guardadas y puedes pagarlas cuando quieras. ¿Solo quieres mirar cómo funciona? Usa una de las cuentas de demostración.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ACCESO ============ -->
+    <section class="seccion pt-2" aria-label="Entrar o crear cuenta">
+      <div class="container">
+        <div class="row g-5 align-items-start">
+          <div class="col-lg-7">
+            <div class="aviso-servidor mb-4" id="avisoServidor" role="status" hidden>
+              <strong>El servidor no está disponible.</strong>
+              Para entrar hace falta la base de datos: abre el sitio publicado en <a href="https://alapar-utp.vercel.app/entrar">alapar-utp.vercel.app</a> o ejecuta <code>npm run dev</code>.
+            </div>
+
+            <!-- Ya con sesión -->
+            <div class="panel-formulario ya-dentro" id="yaDentro" hidden>
+              <span class="ya-dentro__avatar" aria-hidden="true" data-sesion-iniciales></span>
+              <div>
+                <h2 class="h3 mb-1">Ya entraste como <span data-sesion-nombre></span></h2>
+                <p class="txt-suave mb-3" data-sesion-correo></p>
+                <div class="d-flex flex-wrap gap-2">
+                  <a class="btn btn-tinta" href="mi-cuenta.html">Ir a mis reservas</a>
+                  <a class="btn btn-linea" href="admin.html" id="irPanel" hidden>Panel de administración</a>
+                  <button class="btn btn-linea" type="button" data-sesion-salir>Cerrar sesión</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-formulario panel-acceso" id="panelFormularios">
+              <div class="pestanas pestanas--acceso" role="tablist" aria-label="Entrar o crear cuenta" data-activa="0">
+                <button class="pestana is-activa" type="button" role="tab" id="pestanaEntrar" aria-selected="true" aria-controls="formEntrar" data-pestana="entrar">Entrar</button>
+                <button class="pestana" type="button" role="tab" id="pestanaRegistro" aria-selected="false" aria-controls="formRegistro" tabindex="-1" data-pestana="registro">Crear cuenta</button>
+                <span class="pestanas__marcador" aria-hidden="true"></span>
+              </div>
+
+              <!-- Entrar -->
+              <form id="formEntrar" role="tabpanel" aria-labelledby="pestanaEntrar" action="#" method="post" novalidate autocomplete="on">
+                <div class="alerta-form" role="alert" hidden></div>
+                <div class="row g-3">
+                  <div class="col-12" data-campo="correo">
+                    <label class="form-label" for="entrarCorreo">Correo</label>
+                    <input class="form-control" type="email" id="entrarCorreo" name="correo" placeholder="nombre@utp.ac.pa" autocomplete="username" inputmode="email" required>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-12" data-campo="clave">
+                    <label class="form-label" for="entrarClave">Contraseña</label>
+                    <div class="campo-clave">
+                      <input class="form-control" type="password" id="entrarClave" name="clave" autocomplete="current-password" required>
+                      <button class="campo-clave__ver" type="button" data-ver-clave="entrarClave" aria-pressed="false" aria-label="Mostrar contraseña">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-12 mt-4">
+                    <button class="btn btn-tinta btn-lg w-100 justify-content-center" type="submit">Entrar
+                      <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <p class="col-12 text-center small txt-suave mb-0">¿Aún no tienes cuenta? <a href="#formRegistro" data-ir-pestana="registro">Crea una en un minuto</a>.</p>
+                </div>
+                <!-- En el teléfono las notas de demostración quedan abajo: acceso rápido aquí -->
+                <div class="demo-rapida d-lg-none">
+                  <span class="demo-rapida__rotulo">¿Solo quieres probar?</span>
+                  <button class="btn btn-linea btn-sm" type="button" data-demo="estudiante">Estudiante demo</button>
+                  <button class="btn btn-linea btn-sm" type="button" data-demo="admin">Administración demo</button>
+                </div>
+              </form>
+
+              <!-- Crear cuenta -->
+              <form id="formRegistro" role="tabpanel" aria-labelledby="pestanaRegistro" action="#" method="post" novalidate autocomplete="on" hidden>
+                <div class="alerta-form" role="alert" hidden></div>
+                <div class="row g-3">
+                  <div class="col-md-6" data-campo="nombre">
+                    <label class="form-label" for="registroNombre">Nombre completo</label>
+                    <input class="form-control" type="text" id="registroNombre" name="nombre" placeholder="Ej.: Ana Pérez" autocomplete="name" required minlength="3">
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-md-6" data-campo="correo">
+                    <label class="form-label" for="registroCorreo">Correo</label>
+                    <input class="form-control" type="email" id="registroCorreo" name="correo" placeholder="nombre@utp.ac.pa" autocomplete="email" inputmode="email" required>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label" for="registroCarrera">Carrera <span class="txt-suave fw-normal">(opcional)</span></label>
+                    <input class="form-control" type="text" id="registroCarrera" name="carrera" list="carrerasUtp" maxlength="80" autocomplete="off">
+                    <datalist id="carrerasUtp">
+                      <option value="Lic. en Ingeniería de Software"></option>
+                      <option value="Ing. de Sistemas y Computación"></option>
+                      <option value="Lic. en Redes Informáticas"></option>
+                      <option value="Ing. Industrial"></option>
+                      <option value="Ing. Civil"></option>
+                      <option value="Ing. Eléctrica y Electrónica"></option>
+                      <option value="Ing. Mecánica"></option>
+                    </datalist>
+                  </div>
+                  <div class="col-md-6" data-campo="clave">
+                    <label class="form-label" for="registroClave">Contraseña</label>
+                    <div class="campo-clave">
+                      <input class="form-control" type="password" id="registroClave" name="clave" autocomplete="new-password" required minlength="8">
+                      <button class="campo-clave__ver" type="button" data-ver-clave="registroClave" aria-pressed="false" aria-label="Mostrar contraseña">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+                      </button>
+                    </div>
+                    <div class="form-text">Mínimo 8 caracteres. Se guarda cifrada con scrypt: nadie puede leerla.</div>
+                    <div class="invalid-feedback"></div>
+                  </div>
+                  <div class="col-12" data-campo="acepto">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="registroAcepto" name="acepto" required>
+                      <label class="form-check-label" for="registroAcepto">Entiendo que es un proyecto académico: la cuenta de administración de demostración es pública, así que no usaré mi correo ni una contraseña reales.</label>
+                      <div class="invalid-feedback"></div>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-4">
+                    <button class="btn btn-tinta btn-lg w-100 justify-content-center" type="submit">Crear mi cuenta
+                      <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                  </div>
+                  <p class="col-12 text-center small txt-suave mb-0">¿Ya tienes cuenta? <a href="#formEntrar" data-ir-pestana="entrar">Entra</a>.</p>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Cuentas de demostración -->
+          <div class="col-lg-5">
+            <aside class="demo-cuentas" aria-labelledby="demo-titulo">
+              <span class="eyebrow">Para probar</span>
+              <h2 id="demo-titulo" class="h3">Cuentas de demostración</h2>
+              <p class="txt-suave">Un toque en la nota y entras. La de estudiante reserva y paga en la caja simulada; la de administración ve a todas las personas registradas y todas las compras.</p>
+
+              <div class="notas-demo">
+                <article class="nota nota--demo" style="--nota-bg:#fff3b0;--rot:-1.6deg">
+                  <span class="nota-demo__rol">Estudiante</span>
+                  <dl class="credenciales">
+                    <dt>Correo</dt><dd>estudiante@alapar.demo</dd>
+                    <dt>Contraseña</dt><dd>Estudiante2026</dd>
+                  </dl>
+                  <button class="btn btn-tinta btn-sm" type="button" data-demo="estudiante">Entrar como estudiante
+                    <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </article>
+                <article class="nota nota--demo" style="--nota-bg:#e8f0ff;--rot:1.3deg">
+                  <span class="nota-demo__rol">Administración</span>
+                  <dl class="credenciales">
+                    <dt>Correo</dt><dd>admin@alapar.demo</dd>
+                    <dt>Contraseña</dt><dd>Admin2026</dd>
+                  </dl>
+                  <button class="btn btn-tinta btn-sm" type="button" data-demo="admin">Entrar como administración
+                    <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </button>
+                </article>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ PIE DE PÁGINA ============ -->
+  <footer class="pie" id="pie">
+    <div class="container">
+      <div class="row g-4 g-lg-5">
+        <div class="col-lg-4">
+          <a class="marca-ap" href="index.html" aria-label="A la Par, ir al inicio">
+            <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+              <rect x="11.5" y="8" width="10" height="25" rx="5" fill="currentColor"/>
+              <rect x="26.5" y="3" width="10" height="30" rx="5" fill="currentColor"/>
+              <path d="M7.5 40.2C14 38.6 34 38.6 40.5 39.8" stroke="#FFD400" stroke-width="6" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span>a la par</span>
+          </a>
+          <p class="pie__descripcion">Tutorías entre estudiantes de la Universidad Tecnológica de Panamá. Aprende a la par de quien ya aprobó la materia.</p>
+        </div>
+
+        <nav class="col-6 col-lg-2" aria-label="Mapa del sitio">
+          <h4>Sitio</h4>
+          <ul>
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="como-funciona.html">Cómo funciona</a></li>
+            <li><a href="materias.html">Materias</a></li>
+            <li><a href="tutores.html">Tutores</a></li>
+            <li><a href="nosotros.html">Nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+            <li><a href="carrito.html">Carrito</a></li>
+          </ul>
+        </nav>
+
+        <div class="col-6 col-lg-3">
+          <h4>Contacto</h4>
+          <address>
+            Campus Dr. Víctor Levi Sasso<br>
+            Ciudad de Panamá, Panamá<br>
+            <a href="mailto:hola@alapar.app">hola@alapar.app</a><br>
+            <a href="tel:+50760000000">+507 6000-0000</a>
+          </address>
+        </div>
+
+        <div class="col-lg-3">
+          <h4>Proyecto académico</h4>
+          <ul>
+            <li>Ingeniería Web · Proyecto N.º 1</li>
+            <li>Facultad de Ingeniería de Sistemas Computacionales</li>
+            <li>Universidad Tecnológica de Panamá · 2026</li>
+            <li><a href="nosotros.html#proyecto">Ficha técnica del proyecto</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pie__aviso">
+        <span>© 2026 A la Par · Luis Amaral, Alejandro Brito Olivera, Marcos Gaitán, Pedro Garay y David González</span>
+        <span>Iniciativa estudiantil. No es un sitio oficial de la UTP.</span>
+      </div>
+
+      <p class="pie__gigante" aria-hidden="true">a la par</p>
+    </div>
+  </footer>
+
+  <!-- Ventana para reservar horas con un tutor (la rellena js/carrito.js) -->
+  <div class="modal fade modal-reserva" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaTitulo" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <form class="modal-content" novalidate>
+        <div class="modal-header">
+          <div class="modal-reserva__tutor" data-reserva="tutor"><h2 class="modal-title" id="modalReservaTitulo">Reservar horas</h2></div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label" for="reservaMateria">Materia</label>
+            <select class="form-select" id="reservaMateria" name="materia"></select>
+          </div>
+          <fieldset class="mb-3">
+            <legend class="form-label">Modalidad</legend>
+            <div class="row g-2" data-reserva="modalidades"></div>
+          </fieldset>
+          <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+            <div>
+              <span class="form-label d-block" id="reservaHorasEtiqueta">Horas</span>
+              <div class="contador-horas contador-horas--grande" role="group" aria-labelledby="reservaHorasEtiqueta">
+                <button type="button" data-horas="-1" aria-label="Una hora menos">−</button>
+                <output id="reservaHoras" aria-live="polite">1 h</output>
+                <button type="button" data-horas="1" aria-label="Una hora más">+</button>
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="txt-mono txt-suave d-block">Importe</span>
+              <strong class="modal-reserva__importe" data-reserva="importe">$0.00</strong>
+              <span class="small txt-suave d-block" data-reserva="calculo"></span>
+            </div>
+          </div>
+          <p class="small txt-suave mt-3 mb-0" data-reserva="horario"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-linea" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-tinta">Añadir al carrito
+            <svg class="flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Caja: pago simulado de una reserva (la anima js/caja.js) -->
+  <div class="modal fade modal-caja" id="modalCaja" tabindex="-1" aria-labelledby="cajaTitulo" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-md-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <span class="eyebrow">Caja · pago simulado</span>
+            <h2 class="modal-title" id="cajaTitulo" tabindex="-1">Paga tu reserva</h2>
+          </div>
+          <button type="button" class="btn-close" data-caja-cerrar aria-label="Cerrar la caja"></button>
+        </div>
+        <div class="modal-body caja" data-caja-fase="metodo">
+          <div class="caja__recibo" data-caja="recibo"></div>
+          <div class="caja__panel" data-caja="panel"></div>
+        </div>
+        <p class="visually-hidden" role="status" aria-live="polite" data-caja="anuncio"></p>
+      </div>
+    </div>
+  </div>
+  <!-- Textura de tinta del sello «Pagado» -->
+  <svg class="visually-hidden" aria-hidden="true" focusable="false">
+    <filter id="tinta-sello"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="ruido"/><feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.6"/></filter>
+  </svg>
+
+  <!-- Aviso flotante reutilizable -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="avisoGlobal" class="toast align-items-center" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Bootstrap + capas propias (datos → modelos → interfaz → validación → carrito → páginas) -->
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js" defer></script>
+  <script src="js/datos.js" defer></script>
+  <script src="js/modelos.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/validacion.js" defer></script>
+  <script src="js/sesion.js" defer></script>
+  <script src="js/carrito.js" defer></script>
+  <script src="js/caja.js" defer></script>
+  <script src="js/admin.js" defer></script>
+  <script src="js/paginas.js" defer></script>
+</body>
+</html>

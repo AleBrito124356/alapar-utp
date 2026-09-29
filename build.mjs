@@ -12,6 +12,7 @@
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import vm from "node:vm";
 
 const raiz = dirname(fileURLToPath(import.meta.url));
 const src = join(raiz, "src");
@@ -57,3 +58,20 @@ for (const archivo of paginas) {
 }
 
 console.log(`\n${escritas} página(s) generadas en ${raiz}`);
+
+// ---------------------------------------------------------------------
+// Catálogo del servidor: la API necesita las tarifas y materias de cada
+// tutor para recalcular los importes. Se genera aquí desde js/datos.js,
+// que sigue siendo la única fuente de verdad.
+// ---------------------------------------------------------------------
+const contexto = vm.createContext({});
+vm.runInContext(leer(join(raiz, "js", "datos.js")) + "\n;globalThis.__DATOS = DATOS;", contexto);
+const { materias, tutores } = contexto.__DATOS;
+const catalogo = [
+  "// GENERADO por build.mjs a partir de js/datos.js: no editar a mano.",
+  `export const MATERIAS = ${JSON.stringify(materias.map(({ codigo, nombre, area }) => ({ codigo, nombre, area })), null, 2)};`,
+  `export const TUTORES = ${JSON.stringify(tutores.map(({ id, nombre, carrera, precio, modalidades, materias, foto }) => ({ id, nombre, carrera, precio, modalidades, materias, foto })), null, 2)};`,
+  ""
+].join("\n");
+writeFileSync(join(raiz, "api", "_lib", "catalogo.js"), catalogo, "utf8");
+console.log(`✓ api/_lib/catalogo.js (${materias.length} materias, ${tutores.length} tutores)`);
